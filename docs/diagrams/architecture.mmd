@@ -1,0 +1,17 @@
+---
+config:
+  look: neo
+  theme: redux
+  layout: dagre
+---
+flowchart LR
+
+A[React + Vite] -->|GraphQL| B[NestJS]
+
+B --> C[TypeORM]
+
+C --> D[(PostgreSQL)]
+
+B --> E[Storage Service]
+
+E --> F[Storage Provider]

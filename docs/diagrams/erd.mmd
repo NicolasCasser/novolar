@@ -1,0 +1,72 @@
+---
+config:
+  theme: redux
+  layout: dagre
+  look: neo
+---
+erDiagram
+    direction LR
+
+    User {
+        UUID id PK ""
+        VARCHAR name ""
+        VARCHAR email UK ""
+        VARCHAR password ""
+        TIMESTAMP createdAt ""
+        TIMESTAMP updatedAt ""
+        TIMESTAMP deletedAt ""
+    }
+
+    Animal {
+        UUID id PK ""
+        UUID createdByUserId FK ""
+
+        VARCHAR name ""
+        TEXT description ""
+        ENUM species ""
+        VARCHAR breed ""
+        ENUM sex ""
+        ENUM size ""
+        VARCHAR color ""
+        ENUM state ""
+        VARCHAR city ""
+        INTEGER ageInMonths ""
+        BOOLEAN vaccinated ""
+        BOOLEAN neutered ""
+        ENUM status ""
+
+        TIMESTAMP createdAt ""
+        TIMESTAMP updatedAt ""
+        TIMESTAMP deletedAt ""
+    }
+
+    AnimalImage {
+        UUID id PK ""
+        UUID animalId FK ""
+
+        VARCHAR url ""
+        BOOLEAN isPrimary ""
+
+        TIMESTAMP createdAt ""
+        TIMESTAMP updatedAt ""
+    }
+
+    AdoptionRequest {
+        UUID id PK ""
+        UUID animalId FK ""
+
+        VARCHAR applicantName ""
+        VARCHAR applicantEmail ""
+        VARCHAR applicantPhone ""
+        ENUM state ""
+        VARCHAR city ""
+        TEXT message ""
+        ENUM status ""
+
+        TIMESTAMP createdAt ""
+        TIMESTAMP updatedAt ""
+    }
+
+    User ||--o{ Animal : "creates"
+    Animal ||--o{ AnimalImage : "has"
+    Animal ||--o{ AdoptionRequest : "receives"
