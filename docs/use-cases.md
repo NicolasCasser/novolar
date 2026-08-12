@@ -4,12 +4,12 @@
 
 Este documento descreve os principais casos de uso da plataforma **NovoLar**, uma aplicação web para adoção responsável e gestão de animais resgatados.
 
-Os casos de uso representam as principais interações entre os atores do sistema e a aplicação, servindo como base para a modelagem do banco de dados, definição da arquitetura e implementação das funcionalidades.
+Os casos de uso representam as principais interações entre os atores do sistema e a aplicação, servindo como base para a definição das funcionalidades e do comportamento esperado do sistema.
 
 O diagrama de casos de uso está disponível nos seguintes formatos:
 
-- [`use-cases.puml`](./diagrams/use-cases.puml) 
-- [`use-cases.png`](./diagrams/use-cases.png) 
+- [`use-cases.puml`](./diagrams/use-cases.puml)
+- [`use-cases.png`](./diagrams/use-cases.png)
 
 ---
 
@@ -23,7 +23,7 @@ Visitante.
 
 ### Objetivo
 
-Permitir que o visitante visualize os animais disponíveis para adoção.
+Permitir que o visitante consulte os animais disponíveis para adoção.
 
 ### Pré-condições
 
@@ -32,17 +32,19 @@ Permitir que o visitante visualize os animais disponíveis para adoção.
 ### Fluxo Principal
 
 1. O visitante acessa a página inicial.
-2. O sistema apresenta o catálogo de animais disponíveis.
-3. O visitante pode pesquisar animais por nome.
+2. O sistema apresenta os animais disponíveis para adoção.
+3. O visitante pode pesquisar animais pelo nome.
 4. O visitante pode aplicar filtros por espécie, porte, sexo, idade, estado e cidade.
+5. O sistema apresenta os animais correspondentes aos critérios informados.
 
 ### Fluxos Alternativos
 
-- O sistema informa que nenhum animal foi encontrado para os critérios informados.
+- Nenhum animal corresponde aos critérios de pesquisa ou filtros informados.
+- O sistema informa que nenhum animal foi encontrado.
 
 ### Pós-condições
 
-- O catálogo é exibido conforme os critérios de pesquisa e filtros informados.
+- O visitante visualiza os animais disponíveis conforme os critérios informados.
 
 ---
 
@@ -54,7 +56,7 @@ Visitante.
 
 ### Objetivo
 
-Permitir que o visitante consulte todas as informações de um animal.
+Permitir que o visitante consulte as informações de um animal e manifeste interesse em sua adoção.
 
 ### Pré-condições
 
@@ -62,17 +64,18 @@ Permitir que o visitante consulte todas as informações de um animal.
 
 ### Fluxo Principal
 
-1. O visitante seleciona um animal.
-2. O sistema apresenta suas informações completas.
-3 O visitante pode iniciar o processo de adoção.
+1. O visitante seleciona um animal no catálogo.
+2. O sistema apresenta as informações do animal.
+3. O visitante pode iniciar o processo de manifestação de interesse em adoção.
 
 ### Fluxos Alternativos
 
-- O animal não está mais disponível.
+- O animal não está mais disponível para adoção.
+- O sistema informa que o animal não está mais disponível.
 
 ### Pós-condições
 
-- Os detalhes do animal são exibidos.
+- Os detalhes do animal são apresentados ao visitante.
 
 ---
 
@@ -84,7 +87,7 @@ Visitante.
 
 ### Objetivo
 
-Registrar uma solicitação de interesse em adotar um animal.
+Permitir que o visitante registre uma solicitação de interesse em adotar um animal.
 
 ### Pré-condições
 
@@ -92,22 +95,24 @@ Registrar uma solicitação de interesse em adotar um animal.
 
 ### Fluxo Principal
 
-1. O visitante acessa o formulário de interesse.
-2. Informa os dados solicitados.
-3. Confirma o envio.
-4. O sistema registra a solicitação.
-5 O sistema apresenta uma confirmação do envio.
-6 O sistema envia um e-mail de confirmação ao interessado.
+1. O visitante acessa o formulário de interesse em adoção.
+2. O sistema apresenta os dados necessários para o registro da solicitação.
+3. O visitante informa seus dados e sua mensagem de interesse.
+4. O visitante confirma o envio.
+5. O sistema registra a solicitação.
+6. O sistema apresenta uma confirmação do envio.
+7. O sistema envia uma confirmação da solicitação ao interessado.
 
 ### Fluxos Alternativos
 
 - Existem campos obrigatórios não preenchidos.
 - Os dados informados são inválidos.
-- O animal não está mais disponível para adoção.
+- O animal deixa de estar disponível antes da confirmação do envio.
+- O sistema informa que não é possível registrar a solicitação para o animal.
 
 ### Pós-condições
 
-- A solicitação fica disponível para análise do administrador.
+- A solicitação é registrada com status **PENDING** e fica disponível para análise do administrador.
 
 ---
 
@@ -119,7 +124,7 @@ Administrador.
 
 ### Objetivo
 
-Permitir o acesso à área administrativa do sistema.
+Permitir que o administrador acesse a área administrativa.
 
 ### Pré-condições
 
@@ -127,17 +132,18 @@ Permitir o acesso à área administrativa do sistema.
 
 ### Fluxo Principal
 
-1. O administrador informa e-mail e senha.
+1. O administrador informa seu e-mail e senha.
 2. O sistema valida as credenciais.
-3. O sistema concede acesso ao painel administrativo.
+3. O sistema concede acesso à área administrativa.
 
 ### Fluxos Alternativos
 
-- Credenciais inválidas.
+- As credenciais informadas são inválidas.
+- O sistema informa que não foi possível autenticar o administrador.
 
 ### Pós-condições
 
-- O administrador encontra-se autenticado.
+- O administrador encontra-se autenticado e pode acessar as funcionalidades administrativas.
 
 ---
 
@@ -149,7 +155,7 @@ Administrador.
 
 ### Objetivo
 
-Realizar o gerenciamento dos animais cadastrados.
+Permitir que o administrador cadastre, edite, consulte e gerencie os animais da plataforma.
 
 ### Pré-condições
 
@@ -158,20 +164,24 @@ Realizar o gerenciamento dos animais cadastrados.
 ### Fluxo Principal
 
 1. O administrador acessa o módulo de animais.
-2. Cadastra um novo animal, quando necessário.
-3. Edita informações de um animal existente.
-4. Atualiza seu status de adoção.
-5. Remove um animal quando necessário.
-6. O sistema salva as alterações realizadas.
+2. O administrador cadastra um novo animal ou seleciona um animal existente.
+3. O sistema apresenta as informações do animal.
+4. O administrador pode cadastrar ou alterar as informações do animal.
+5. O administrador pode gerenciar as imagens do animal.
+6. O administrador pode atualizar o status do animal.
+7. O administrador pode remover um animal quando permitido.
+8. O sistema registra as alterações realizadas.
 
 ### Fluxos Alternativos
 
-- Dados inválidos.
-- Animal inexistente.
+- Os dados informados são inválidos.
+- O animal selecionado não existe.
+- O animal não pode ser removido devido a solicitações que ainda estejam em andamento.
+- O sistema informa o motivo pelo qual a operação não pode ser realizada.
 
 ### Pós-condições
 
-- O cadastro do animal permanece atualizado.
+- O cadastro do animal permanece atualizado conforme as operações realizadas pelo administrador.
 
 ---
 
@@ -183,7 +193,7 @@ Administrador.
 
 ### Objetivo
 
-Gerenciar as solicitações de adoção recebidas.
+Permitir que o administrador acompanhe e gerencie as solicitações de adoção recebidas.
 
 ### Pré-condições
 
@@ -191,17 +201,48 @@ Gerenciar as solicitações de adoção recebidas.
 
 ### Fluxo Principal
 
-1. O administrador acessa a lista de solicitações.
-2. Seleciona uma solicitação.
-3. Analisa as informações fornecidas.
-4. Atualiza o status da solicitação.
-5. O sistema registra a alteração.
+1. O administrador acessa a lista de solicitações de adoção.
+2. O sistema apresenta as solicitações recebidas.
+3. O administrador seleciona uma solicitação.
+4. O sistema apresenta as informações fornecidas pelo interessado.
+5. O administrador inicia a análise da solicitação, quando aplicável.
+6. O administrador pode atualizar o status da solicitação.
+7. O sistema registra a alteração realizada.
 
 ### Fluxos Alternativos
 
-- Solicitação inexistente.
+- A solicitação não existe.
+- O administrador coloca a solicitação em **IN_ANALYSIS** após iniciar o contato e a avaliação do interessado.
+- O administrador rejeita a solicitação.
+- O administrador aprova a solicitação.
+
+### Fluxo de aprovação
+
+1. O administrador aprova a solicitação após concluir a avaliação do interessado.
+2. O sistema altera o status da solicitação aprovada para **APPROVED**.
+3. O sistema altera o status do animal relacionado para **ADOPTED**.
+4. O sistema cancela as demais solicitações ainda em andamento relacionadas ao mesmo animal.
+5. O sistema registra as alterações realizadas.
+
+### Fluxo de rejeição
+
+1. O administrador rejeita a solicitação.
+2. O sistema altera o status da solicitação para **REJECTED**.
+3. As demais solicitações relacionadas ao animal permanecem inalteradas.
 
 ### Pós-condições
 
-- A solicitação permanece atualizada no sistema.
+- A solicitação permanece registrada com seu status atualizado.
+- Quando uma solicitação é aprovada, o animal relacionado passa a ser considerado adotado e as demais solicitações em andamento são canceladas.
 
+---
+
+# Estados das solicitações
+
+As solicitações de adoção podem assumir os seguintes estados:
+
+- **PENDING** — solicitação recebida e ainda não iniciada pelo administrador;
+- **IN_ANALYSIS** — administrador iniciou o contato e o processo de avaliação do interessado;
+- **APPROVED** — solicitação aprovada e processo de adoção concluído;
+- **REJECTED** — solicitação recusada durante o processo de avaliação;
+- **CANCELED** — solicitação cancelada porque outra solicitação relacionada ao mesmo animal foi aprovada.

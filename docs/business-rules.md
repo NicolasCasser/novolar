@@ -4,7 +4,7 @@
 
 Este documento descreve as regras de negócio da plataforma **NovoLar**.
 
-As regras aqui apresentadas representam decisões funcionais que determinam o comportamento do sistema diante das diferentes situações do processo de adoção.
+As regras apresentadas determinam o comportamento esperado do sistema diante das diferentes situações relacionadas ao gerenciamento de animais, imagens, solicitações de adoção, catálogo público e administração da plataforma.
 
 Este documento complementa os requisitos funcionais, casos de uso e modelagem de dados, servindo como referência para a implementação das regras de domínio no backend.
 
@@ -13,74 +13,169 @@ Este documento complementa os requisitos funcionais, casos de uso e modelagem de
 As regras descritas neste documento abrangem:
 
 - gerenciamento dos animais;
+- gerenciamento das imagens dos animais;
 - gerenciamento das solicitações de adoção;
 - catálogo público;
 - autenticação administrativa;
 - integridade dos dados;
-- processo de adoção.
+- processo de adoção;
+- exclusão lógica dos registros.
 
-Questões relacionadas à interface do usuário, tecnologias utilizadas e arquitetura da aplicação encontram-se documentadas em seus respectivos arquivos.
-
-## 3. Regras dos Animais
-
-### RN01 — Cadastro de animais
-
-Todo animal cadastrado deverá possuir nome, espécie, raça, sexo, porte, cor, idade, localização, descrição e pelo menos uma imagem.
+Questões relacionadas à interface, tecnologias e arquitetura encontram-se documentadas em seus respectivos arquivos.
 
 ---
 
-### RN02 — Status inicial
+# 3. Regras dos Animais
 
-Todo animal cadastrado deverá possuir o status **Disponível** no momento de sua criação.
+### RN01 — Dados obrigatórios do animal
+
+Todo animal cadastrado deverá possuir obrigatoriamente:
+
+- Nome;
+- Espécie;
+- Raça;
+- Sexo;
+- Porte;
+- Cor;
+- Idade;
+- Estado;
+- Cidade;
+- Descrição;
+- Informação sobre vacinação;
+- Informação sobre castração;
+- Pelo menos uma imagem.
 
 ---
 
-### RN03 — Idade do animal
+### RN02 — Raça do animal
 
-A idade poderá ser informada em anos ou meses pelo administrador.
+A raça deverá ser informada obrigatoriamente.
 
-Independentemente da forma de entrada, o sistema armazenará internamente a idade em meses.
+Quando a raça do animal não for conhecida ou definida, deverá ser utilizado o valor **SRD (Sem Raça Definida)**.
 
-A conversão para anos ou meses será responsabilidade da camada de apresentação.
+A raça será armazenada como texto, permitindo tanto raças específicas quanto o valor SRD.
 
 ---
 
-### RN04 — Imagem principal
+### RN03 — Espécie do animal
+
+A espécie deverá ser selecionada a partir dos valores definidos pelo enum `AnimalSpecies`:
+
+- DOG;
+- CAT;
+- BIRD;
+- RABBIT;
+- OTHER.
+
+---
+
+### RN04 — Status inicial
+
+Todo animal cadastrado deverá possuir o status **AVAILABLE** no momento de sua criação.
+
+---
+
+### RN05 — Status do animal
+
+O status de um animal poderá assumir somente os seguintes valores:
+
+- AVAILABLE — disponível para adoção;
+- ADOPTED — adotado.
+
+Um animal deverá passar automaticamente para `ADOPTED` quando uma de suas solicitações de adoção for aprovada.
+
+---
+
+### RN06 — Idade do animal
+
+A idade poderá ser informada pelo administrador em anos ou meses.
+
+Independentemente da forma de entrada, o sistema deverá armazenar internamente a idade em meses, utilizando o campo `ageInMonths`.
+
+A conversão entre anos e meses será responsabilidade da camada de apresentação.
+
+---
+
+### RN07 — Localização do animal
+
+Todo animal deverá possuir estado e cidade de localização.
+
+O estado deverá utilizar o enum `BrazilianState`.
+
+A cidade deverá ser informada de acordo com o estado selecionado.
+
+---
+
+### RN08 — Consistência da localização do animal
+
+A cidade informada para um animal deverá pertencer ao estado selecionado.
+
+A validação deverá utilizar os dados disponibilizados pela API oficial do IBGE.
+
+Os dados de estados e municípios não serão armazenados pela aplicação como uma tabela própria.
+
+---
+
+### RN09 — Imagens do animal
+
+Todo animal deverá possuir pelo menos uma imagem e poderá possuir no máximo cinco imagens cadastradas.
+
+As imagens serão armazenadas por meio da entidade `AnimalImage`, não diretamente na entidade `Animal`.
+
+---
+
+### RN10 — Imagem principal
 
 Todo animal deverá possuir exatamente uma imagem definida como principal.
 
-Esta imagem será utilizada nas listagens e demais locais onde apenas uma imagem for exibida.
+A imagem principal será utilizada nos contextos em que apenas uma imagem do animal for exibida, como o catálogo público.
 
 ---
 
-### RN05 — Múltiplas imagens
+### RN11 — Integridade das imagens
 
-Um animal poderá possuir até cinco imagens cadastradas.
+Toda imagem deverá estar obrigatoriamente vinculada a um único animal.
 
----
-
-### RN06 — Atualização de status
-
-O administrador poderá alterar o status de um animal entre:
-
-- Disponível;
-- Adotado.
+Uma imagem não poderá existir sem um animal associado.
 
 ---
 
-### RN07 — Exclusão lógica
+### RN12 — Informações de vacinação e castração
 
-A remoção de um animal deverá ser realizada por meio de Soft Delete, preservando seu histórico no banco de dados.
+Todo animal deverá possuir informações sobre:
 
-## 4. Regras das Solicitações de Adoção
+- vacinação;
+- castração.
 
-### RN08 — Registro de solicitação
-
-Uma solicitação de adoção somente poderá ser registrada para animais com status **Disponível**.
+Essas informações deverão ser armazenadas como valores booleanos.
 
 ---
 
-### RN09 — Dados obrigatórios
+### RN13 — Exclusão lógica de animais
+
+A remoção de um animal deverá ser realizada por meio de Soft Delete.
+
+O registro deverá permanecer armazenado no banco de dados, permitindo a preservação de seu histórico.
+
+---
+
+### RN14 — Responsabilidade pelo cadastro
+
+Todo animal deverá estar associado a um único administrador responsável pelo seu cadastro.
+
+Um administrador poderá cadastrar vários animais.
+
+---
+
+# 4. Regras das Solicitações de Adoção
+
+### RN15 — Registro de solicitação
+
+Uma solicitação de adoção somente poderá ser registrada para um animal com status **AVAILABLE**.
+
+---
+
+### RN16 — Dados obrigatórios da solicitação
 
 Toda solicitação deverá conter obrigatoriamente:
 
@@ -93,70 +188,152 @@ Toda solicitação deverá conter obrigatoriamente:
 
 ---
 
-### RN10 — Status inicial da solicitação
+### RN17 — Status inicial da solicitação
 
-Toda solicitação deverá ser criada com o status **Pendente**.
-
----
-
-### RN11 — Alteração de status
-
-O administrador poderá alterar o status da solicitação para:
-
-- Pendente;
-- Em análise;
-- Aprovada;
-- Rejeitada.
+Toda solicitação deverá ser criada com o status **PENDING**.
 
 ---
 
-### RN12 — Histórico das solicitações
+### RN18 — Status das solicitações
 
-As solicitações de adoção não poderão ser excluídas, preservando o histórico do processo de adoção.
+Uma solicitação poderá possuir somente um dos seguintes status:
 
----
-
-### RN13 — Independência das solicitações
-
-Um mesmo animal poderá possuir múltiplas solicitações de adoção.
-
-A aprovação ou rejeição de uma solicitação não deverá alterar automaticamente as demais.
+- PENDING — solicitação aguardando início da análise;
+- IN_ANALYSIS — administrador entrou em contato com o interessado e iniciou o processo de avaliação;
+- APPROVED — solicitação aprovada;
+- REJECTED — solicitação rejeitada;
+- CANCELED — solicitação cancelada porque outra solicitação referente ao mesmo animal foi aprovada.
 
 ---
 
-### RN14 — Alteração do status do animal
+### RN19 — Alteração do status da solicitação
 
-A aprovação de uma solicitação não altera automaticamente o status do animal.
+A alteração dos status das solicitações será realizada exclusivamente por administradores autenticados, exceto pelas alterações automáticas previstas nas regras do processo de adoção.
 
-A atualização do status do animal será realizada manualmente pelo administrador.
-
----
-
-### RN15 — Confirmação ao interessado
-
-Após o envio da solicitação, o sistema deverá enviar um e-mail de confirmação ao interessado contendo um resumo da solicitação realizada.
+O administrador poderá alterar uma solicitação entre os estados permitidos pelo fluxo definido para o sistema.
 
 ---
 
-### RN16 — Responsabilidade da análise
+### RN20 — Fluxo de análise
 
-A análise das solicitações será realizada exclusivamente por administradores autenticados.
+O status `IN_ANALYSIS` deverá ser utilizado quando o administrador entrar em contato com o interessado e iniciar o processo de avaliação da solicitação.
 
-## 5. Regras do Catálogo Público
-
-### RN17 — Animais exibidos
-
-O catálogo público deverá exibir apenas animais com status **Disponível**.
+A utilização desse status permite distinguir solicitações que ainda aguardam atendimento daquelas que já estão em processo de avaliação.
 
 ---
 
-### RN18 — Pesquisa
+### RN21 — Múltiplas solicitações
 
-A pesquisa de animais deverá ser realizada pelo nome do animal.
+Um mesmo animal poderá possuir múltiplas solicitações de adoção enquanto estiver com status `AVAILABLE`.
+
+A existência de uma solicitação em análise não impedirá o recebimento de novas solicitações para o mesmo animal.
 
 ---
 
-### RN19 — Filtros
+### RN22 — Aprovação de solicitação
+
+Uma solicitação somente poderá ser aprovada por um administrador autenticado.
+
+Ao aprovar uma solicitação:
+
+1. A solicitação deverá assumir o status `APPROVED`.
+2. O animal relacionado deverá passar automaticamente para `ADOPTED`.
+3. Todas as demais solicitações do mesmo animal que estejam com status `PENDING` ou `IN_ANALYSIS` deverão passar automaticamente para `CANCELED`.
+
+---
+
+### RN23 — Cancelamento das demais solicitações
+
+Quando uma solicitação for aprovada, as demais solicitações relacionadas ao mesmo animal que ainda estiverem em processo deverão ser canceladas automaticamente.
+
+Somente solicitações com status:
+
+- `PENDING`;
+- `IN_ANALYSIS`;
+
+deverão ser alteradas automaticamente para `CANCELED`.
+
+Solicitações que já estejam `REJECTED` não deverão ser alteradas.
+
+---
+
+### RN24 — Rejeição de solicitação
+
+A rejeição de uma solicitação deverá alterar somente o status da própria solicitação para `REJECTED`.
+
+As demais solicitações relacionadas ao mesmo animal não deverão ser alteradas automaticamente.
+
+---
+
+### RN25 — Solicitação após aprovação
+
+Um animal com status `ADOPTED` não poderá receber novas solicitações de adoção.
+
+---
+
+### RN26 — Exclusão de solicitações
+
+Solicitações de adoção não poderão ser excluídas.
+
+Os registros deverão ser preservados para manter o histórico do processo de adoção.
+
+---
+
+### RN27 — Integridade das solicitações
+
+Toda solicitação deverá estar obrigatoriamente vinculada a um único animal.
+
+Uma solicitação não poderá existir sem um animal associado.
+
+---
+
+### RN28 — Localização do interessado
+
+Toda solicitação deverá possuir estado e cidade do interessado.
+
+O estado deverá utilizar o enum `BrazilianState`.
+
+A cidade deverá corresponder ao estado informado.
+
+---
+
+### RN29 — Consistência da localização do interessado
+
+A cidade informada na solicitação deverá pertencer ao estado selecionado.
+
+A validação deverá utilizar os dados disponibilizados pela API oficial do IBGE.
+
+---
+
+### RN30 — Confirmação da solicitação
+
+Após o registro de uma solicitação de adoção, o sistema deverá enviar um e-mail de confirmação ao interessado contendo um resumo da solicitação realizada.
+
+---
+
+### RN31 — Responsabilidade pela análise
+
+A análise e o gerenciamento das solicitações de adoção serão realizados exclusivamente por administradores autenticados.
+
+---
+
+# 5. Regras do Catálogo Público
+
+### RN32 — Animais exibidos
+
+O catálogo público deverá exibir somente animais com status `AVAILABLE`.
+
+Animais com status `ADOPTED` ou removidos logicamente não deverão aparecer no catálogo de animais disponíveis.
+
+---
+
+### RN33 — Pesquisa por nome
+
+O catálogo deverá permitir a pesquisa de animais pelo nome.
+
+---
+
+### RN34 — Filtros
 
 O catálogo deverá permitir filtrar animais por:
 
@@ -169,149 +346,256 @@ O catálogo deverá permitir filtrar animais por:
 
 ---
 
-### RN20 — Dependência entre Estado e Cidade
+### RN35 — Dependência entre estado e cidade
 
-O filtro de cidades somente deverá ser habilitado após a seleção de um estado.
+O filtro de cidades deverá depender do estado selecionado.
 
-As cidades disponíveis deverão corresponder ao estado selecionado.
-
----
-
-### RN21 — Origem dos estados e municípios
-
-A lista de estados e municípios deverá ser obtida por meio da API oficial do IBGE, não sendo armazenada pela aplicação.
+As cidades disponibilizadas como opção de filtro deverão corresponder ao estado selecionado.
 
 ---
 
-### RN22 — Ordenação
+### RN36 — Ordenação
 
-O catálogo deverá permitir ordenar os animais por:
+O catálogo deverá permitir a ordenação dos animais por:
 
 - Mais recentes;
 - Idade.
 
 ---
 
-### RN23 — Paginação
+### RN37 — Paginação
 
 O catálogo deverá utilizar paginação para limitar a quantidade de animais exibidos por página.
 
 ---
 
-### RN24 — Detalhes do animal
+### RN38 — Detalhes do animal
 
-Todas as informações públicas de um animal deverão ser acessadas exclusivamente através da página de detalhes do animal.
-
-## 6. Regras Administrativas
-
-### RN25 — Acesso administrativo
-
-A área administrativa deverá ser acessível apenas por usuários autenticados.
+A página de detalhes deverá apresentar todas as informações públicas disponíveis sobre o animal.
 
 ---
 
-### RN26 — Perfil de acesso
+### RN39 — Animal indisponível
 
-Na primeira versão do sistema existirá apenas um perfil de usuário: **Administrador**.
+Caso um animal deixe de estar disponível para adoção, ele não deverá mais aparecer no catálogo de animais disponíveis.
 
----
-
-### RN27 — Autenticação
-
-O acesso à área administrativa será realizado por meio de e-mail e senha.
-
-Após autenticação bem-sucedida, o sistema deverá conceder acesso às funcionalidades administrativas.
+O acesso público aos seus detalhes deverá respeitar o status atual do animal.
 
 ---
 
-### RN28 — Dashboard
+# 6. Regras Administrativas
 
-O dashboard administrativo deverá apresentar indicadores baseados apenas em registros ativos do sistema.
+### RN40 — Acesso administrativo
 
----
-
-### RN29 — Cadastro de animais
-
-Todo animal cadastrado deverá ser associado ao administrador responsável pelo seu cadastro.
+A área administrativa deverá ser acessível somente por usuários autenticados.
 
 ---
 
-### RN30 — Observações internas
+### RN41 — Perfil de acesso
 
-As observações registradas em uma solicitação deverão ser visíveis apenas para administradores autenticados.
+Na primeira versão do sistema existirá somente um perfil de usuário:
 
----
+- Administrador.
 
-### RN31 — Exclusividade das funcionalidades administrativas
-
-As funcionalidades de cadastro, edição, exclusão de animais e gerenciamento de solicitações deverão estar disponíveis exclusivamente na área administrativa.
-
-## 7. Regras de Integridade
-
-### RN32 — Exclusão de animais
-
-Um animal não poderá ser removido enquanto possuir solicitações com status **Pendente** ou **Em análise**.
+Não haverá diferentes níveis de permissão entre administradores.
 
 ---
 
-### RN33 — Exclusão lógica
+### RN42 — Autenticação
 
-A exclusão de animais e administradores deverá ser realizada por meio de Soft Delete, preservando o histórico dos registros.
+O acesso administrativo deverá ser realizado por meio de e-mail e senha.
 
----
-
-### RN34 — Exclusão de administradores
-
-Um administrador não poderá ser removido enquanto existirem animais cadastrados sob sua responsabilidade.
+Após a validação bem-sucedida das credenciais, o sistema deverá conceder acesso às funcionalidades administrativas.
 
 ---
 
-### RN35 — Imagem principal
+### RN43 — Unicidade do e-mail
+
+Não poderá existir mais de um administrador utilizando o mesmo endereço de e-mail.
+
+---
+
+### RN44 — Exclusividade das funcionalidades administrativas
+
+As seguintes funcionalidades deverão estar disponíveis exclusivamente para administradores autenticados:
+
+- cadastro de animais;
+- edição de animais;
+- exclusão de animais;
+- alteração dos status dos animais, quando aplicável;
+- visualização de solicitações;
+- alteração dos status das solicitações.
+
+---
+
+### RN45 — Dashboard
+
+Os indicadores apresentados no dashboard administrativo deverão considerar somente registros ativos do sistema.
+
+Registros removidos logicamente não deverão ser considerados nos indicadores.
+
+---
+
+# 7. Regras de Integridade
+
+### RN46 — Exclusão de animais com solicitações em andamento
+
+Um animal não poderá ser removido enquanto possuir solicitações com status:
+
+- `PENDING`;
+- `IN_ANALYSIS`.
+
+Solicitações com status `APPROVED`, `REJECTED` ou `CANCELED` não impedirão a exclusão lógica do animal, pois representam histórico encerrado.
+
+---
+
+### RN47 — Exclusão lógica de administradores
+
+A remoção de um administrador deverá ser realizada por meio de Soft Delete.
+
+O registro deverá permanecer armazenado para preservação do histórico.
+
+A existência de animais anteriormente cadastrados pelo administrador não deverá impedir sua exclusão lógica.
+
+---
+
+### RN48 — Integridade da imagem principal
 
 Cada animal deverá possuir exatamente uma imagem marcada como principal.
 
----
-
-### RN36 — Integridade das solicitações
-
-Toda solicitação deverá estar obrigatoriamente vinculada a um único animal.
+A aplicação deverá impedir que um animal permaneça sem imagem principal ou com mais de uma imagem principal.
 
 ---
 
-### RN37 — Integridade das imagens
+### RN49 — Limite de imagens
 
-Toda imagem cadastrada deverá estar obrigatoriamente vinculada a um único animal.
-
----
-
-### RN38 — Unicidade do e-mail
-
-Não poderá existir mais de um administrador cadastrado utilizando o mesmo endereço de e-mail.
+Um animal não poderá possuir mais de cinco imagens cadastradas.
 
 ---
 
-### RN39 — Consistência da localização
+### RN50 — Integridade das relações
 
-A cidade informada para um animal ou para uma solicitação deverá pertencer ao estado selecionado.
+As seguintes relações deverão ser obrigatoriamente respeitadas:
 
-Essa validação será realizada utilizando os dados disponibilizados pela API oficial do IBGE.
+- Todo animal pertence a um administrador;
+- Toda imagem pertence a um animal;
+- Toda solicitação pertence a um animal.
 
 ---
 
-### RN40 — Preservação do histórico
+### RN51 — Preservação do histórico
 
-As solicitações de adoção não poderão ser excluídas, garantindo a preservação do histórico do processo de adoção.
+As solicitações de adoção deverão permanecer armazenadas independentemente de seu status.
+
+Solicitações `APPROVED`, `REJECTED` e `CANCELED` deverão continuar disponíveis para consulta administrativa como histórico do processo de adoção.
+
+---
+
+# 8. Regras de Segurança e Privacidade
+
+### RN52 — Proteção das credenciais
+
+As senhas dos administradores deverão ser armazenadas utilizando hash seguro com `bcrypt`.
+
+O sistema não deverá armazenar senhas em texto puro.
+
+---
+
+### RN53 — Proteção das funcionalidades administrativas
+
+As funcionalidades administrativas deverão exigir autenticação baseada em JWT.
+
+---
+
+### RN54 — Dados dos interessados
+
+Os dados fornecidos pelos interessados nas solicitações de adoção deverão ser acessíveis somente aos administradores autenticados.
+
+---
+
+### RN55 — Observações administrativas
+
+Caso sejam implementadas observações internas relacionadas às solicitações de adoção, essas informações deverão ser acessíveis exclusivamente aos administradores autenticados.
+
+---
+
+# 9. Regras do Processo de Adoção
+
+### RN56 — Disponibilidade para solicitação
+
+Somente animais com status `AVAILABLE` poderão receber novas solicitações de adoção.
+
+---
+
+### RN57 — Processo de análise
+
+Uma solicitação inicialmente permanecerá com status `PENDING`.
+
+Quando o administrador entrar em contato com o interessado e iniciar o processo de avaliação, a solicitação poderá passar para `IN_ANALYSIS`.
+
+---
+
+### RN58 — Aprovação e adoção
+
+A aprovação de uma solicitação representa a decisão de realizar a adoção daquele animal.
+
+Ao aprovar uma solicitação:
+
+- a solicitação passa para `APPROVED`;
+- o animal passa automaticamente para `ADOPTED`;
+- as demais solicitações `PENDING` ou `IN_ANALYSIS` do mesmo animal passam para `CANCELED`.
+
+---
+
+### RN59 — Rejeição
+
+A rejeição de uma solicitação não altera o status do animal nem das demais solicitações.
+
+A solicitação rejeitada passa para `REJECTED`.
+
+---
+
+### RN60 — Cancelamento automático
+
+O status `CANCELED` será utilizado quando uma solicitação deixar de ser válida porque outra solicitação referente ao mesmo animal foi aprovada.
+
+O cancelamento automático deverá ocorrer somente para solicitações `PENDING` ou `IN_ANALYSIS`.
+
+---
+
+### RN61 — Encerramento do processo
+
+Após a aprovação de uma solicitação, o animal será considerado adotado e não poderá receber novas solicitações.
+
+As solicitações relacionadas ao animal permanecerão armazenadas para preservação do histórico.
 
 ---
 
 ## Considerações
 
-As regras descritas neste documento representam o comportamento esperado da plataforma NovoLar na primeira versão do projeto.
+As regras descritas neste documento representam o comportamento definido para a primeira versão da plataforma NovoLar.
 
-Novas regras poderão ser incorporadas conforme a evolução do sistema e a inclusão de novas funcionalidades.
+Este documento deverá ser atualizado sempre que uma nova decisão de negócio alterar o comportamento esperado do sistema.
+
+Novas funcionalidades ou alterações de escopo deverão ser refletidas também nos requisitos, casos de uso e modelagem de dados correspondentes, evitando divergências entre os documentos do projeto.
+
+## Pontos que não fazem parte das regras atuais
+
+As seguintes funcionalidades ou decisões não fazem parte da primeira versão e não deverão ser introduzidas na implementação sem uma decisão específica:
+
+- criação de usuários adotantes;
+- login para visitantes;
+- agendamento de visitas;
+- chat;
+- integração com WhatsApp;
+- notificações em tempo real;
+- gerenciamento de voluntários;
+- múltiplos níveis de administradores;
+- status adicional para animais além de `AVAILABLE` e `ADOPTED`.
 
 ## Histórico de Revisões
 
-| Data | Versão | Alterações |
-|------|--------|------------|
-| 06/08/2026 | 1.0 | Criação inicial do documento de regras de negócio. |
+| Data       | Versão | Alterações |
+| ---------- | ------ | ---------- |
+| 06/08/2026 | 1.0    | Criação inicial do documento de regras de negócio. |
+| 11/08/2026 | 1.1    | Revisão e alinhamento das regras com requisitos, casos de uso e modelagem de dados. |

@@ -7,35 +7,23 @@ actor "Administrador" as Admin
 
 rectangle "Plataforma NovoLar" {
 
-    usecase "Visualizar animais disponíveis" as UC01
-    usecase "Pesquisar e filtrar animais" as UC02
-    usecase "Visualizar perfil do animal" as UC03
-    usecase "Registrar interesse em adoção" as UC04
+    usecase "Consultar catálogo de animais" as UC01
+    usecase "Visualizar detalhes do animal" as UC02
+    usecase "Registrar interesse em adoção" as UC03
 
-    usecase "Autenticar administrador" as UC05
-    usecase "Visualizar dashboard" as UC06
-
-    usecase "Cadastrar animal" as UC07
-    usecase "Editar animal" as UC08
-    usecase "Excluir animal" as UC09
-    usecase "Atualizar status do animal" as UC10
-
-    usecase "Visualizar solicitações" as UC11
-    usecase "Atualizar status da solicitação" as UC12
+    usecase "Autenticar-se" as UC04
+    usecase "Gerenciar animais" as UC05
+    usecase "Gerenciar solicitações de adoção" as UC06
+    usecase "Visualizar dashboard" as UC07
 }
 
 Visitor --> UC01
 Visitor --> UC02
 Visitor --> UC03
-Visitor --> UC04
 
+Admin --> UC04
 Admin --> UC05
 Admin --> UC06
 Admin --> UC07
-Admin --> UC08
-Admin --> UC09
-Admin --> UC10
-Admin --> UC11
-Admin --> UC12
 
 @enduml
