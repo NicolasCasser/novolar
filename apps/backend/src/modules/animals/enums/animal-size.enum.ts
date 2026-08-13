@@ -1,12 +1,12 @@
-import { registerEnumType } from "@nestjs/graphql";
+import { registerEnumType } from '@nestjs/graphql';
 
 export enum AnimalSize {
-    SMALL = 'SMALL',
-    MEDIUM = 'MEDIUM',
-    LARGE = 'LARGE',
+  SMALL = 'SMALL',
+  MEDIUM = 'MEDIUM',
+  LARGE = 'LARGE',
 }
 
 registerEnumType(AnimalSize, {
-    name: 'AnimalSize',
-    description: 'Size of the Animal.',
+  name: 'AnimalSize',
+  description: 'Size of the Animal.',
 });

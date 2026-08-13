@@ -1,11 +1,11 @@
-import { registerEnumType } from "@nestjs/graphql";
+import { registerEnumType } from '@nestjs/graphql';
 
 export enum AnimalStatus {
-    AVAILABLE = 'AVAILABLE',
-    ADOPTED = 'ADOPTED',
+  AVAILABLE = 'AVAILABLE',
+  ADOPTED = 'ADOPTED',
 }
 
 registerEnumType(AnimalStatus, {
-    name: 'AnimalStatus',
-    description: 'Status of the Animal.',
+  name: 'AnimalStatus',
+  description: 'Status of the Animal.',
 });
