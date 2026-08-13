@@ -16,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
 
-        ssl: true,
+        ssl: configService.get<string>('POSTGRES_SSL') === 'true',
 
         autoLoadEntities: true,
         synchronize: false,
