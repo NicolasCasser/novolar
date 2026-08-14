@@ -5,6 +5,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DataBaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { HealthResolver } from './health/health.resolver';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { HealthResolver } from './health/health.resolver';
     }),
 
     DataBaseModule,
+    UsersModule,
   ],
   providers: [HealthResolver],
 })
