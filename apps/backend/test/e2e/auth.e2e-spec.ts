@@ -1,7 +1,26 @@
-import { INestApplication } from "@nestjs/common"
-import { Test, TestingModule } from "@nestjs/testing";
-import { AppModule } from "src/app.module";
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppModule } from 'src/app.module';
 import request from 'supertest';
+import { Server } from 'http';
+
+type GraphQLResponse<T> = {
+  data?: T | null;
+  errors?: Array<{
+    message: string;
+  }>;
+};
+
+type LoginResponse = {
+  login: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+    accessToken: string;
+  };
+};
 
 describe('Auth E2E', () => {
   let app: INestApplication;
@@ -25,7 +44,7 @@ describe('Auth E2E', () => {
   });
 
   it('should login with valid credentials', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await request(app.getHttpServer() as Server)
       .post('/graphql')
       .send({
         query: `
@@ -41,26 +60,28 @@ describe('Auth E2E', () => {
                 name
                 email
               }
-              accessToken  
+              accessToken
             }
           }
         `,
       })
       .expect(200);
 
-    expect(response.body.errors).toBeUndefined();
-    expect(response.body.data.login.user).toEqual(
+    const body = response.body as GraphQLResponse<LoginResponse>;
+
+    expect(body.errors).toBeUndefined();
+    expect(body.data?.login.user).toEqual(
       expect.objectContaining({
         name: 'Administrador',
         email: process.env.ADMIN_EMAIL,
       }),
     );
-    expect(response.body.data.login.accessToken).toBeDefined();
-    expect(response.body.data.login.accessToken).not.toBe('');
+    expect(body.data?.login.accessToken).toBeDefined();
+    expect(body.data?.login.accessToken).not.toBe('');
   });
 
   it('should reject login with invalid password', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await request(app.getHttpServer() as Server)
       .post('/graphql')
       .send({
         query: `
@@ -76,20 +97,22 @@ describe('Auth E2E', () => {
                 name
                 email
               }
-              accessToken  
+              accessToken
             }
           }
         `,
       })
       .expect(200);
 
-    expect(response.body.data).toBeNull();
-    expect(response.body.errors).toBeDefined();
-    expect(response.body.errors[0].message).toBe('Invalid Credentials');
+    const body = response.body as GraphQLResponse<LoginResponse>;
+
+    expect(body.data).toBeNull();
+    expect(body.errors).toBeDefined();
+    expect(body.errors?.[0].message).toBe('Invalid Credentials');
   });
 
   it('should reject login with non-existent user', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await request(app.getHttpServer() as Server)
       .post('/graphql')
       .send({
         query: `
@@ -105,15 +128,17 @@ describe('Auth E2E', () => {
                 name
                 email
               }
-              accessToken  
+              accessToken
             }
           }
         `,
       })
       .expect(200);
 
-    expect(response.body.data).toBeNull();
-    expect(response.body.errors).toBeDefined();
-    expect(response.body.errors[0].message).toBe('Invalid Credentials');
+    const body = response.body as GraphQLResponse<LoginResponse>;
+
+    expect(body.data).toBeNull();
+    expect(body.errors).toBeDefined();
+    expect(body.errors?.[0].message).toBe('Invalid Credentials');
   });
 });

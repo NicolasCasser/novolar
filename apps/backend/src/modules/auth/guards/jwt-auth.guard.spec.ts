@@ -20,25 +20,27 @@ describe('JwtAuthGuard', () => {
         },
       };
 
+      const getContextMock = jest.fn().mockReturnValue({
+        req: request,
+      });
+
       const gqlContextMock = {
-        getContext: jest.fn().mockReturnValue({
-          req: request,
-        }),
+        getContext: getContextMock,
       };
 
-      jest
-        .spyOn(GqlExecutionContext, 'create')
-        .mockReturnValue(gqlContextMock as unknown as GqlExecutionContext);
+      const createMock = jest.spyOn(GqlExecutionContext, 'create');
+
+      createMock.mockReturnValue(
+        gqlContextMock as unknown as GqlExecutionContext,
+      );
 
       const executionContext = {} as ExecutionContext;
 
       const result = guard.getRequest(executionContext);
 
       expect(result).toBe(request);
-      expect(GqlExecutionContext.create).toHaveBeenCalledWith(
-        executionContext,
-      );
-      expect(gqlContextMock.getContext).toHaveBeenCalledTimes(1);
+      expect(createMock).toHaveBeenCalledWith(executionContext);
+      expect(getContextMock).toHaveBeenCalledTimes(1);
     });
   });
 });

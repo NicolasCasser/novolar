@@ -17,25 +17,30 @@ describe('AuthService Integration', () => {
   });
 
   afterAll(async () => {
-    const dataSource = module.get(DataSource);
+    const dataSource = module.get<DataSource>(DataSource);
 
     await dataSource.destroy();
   });
 
   describe('login', () => {
     it('should login with valid credentials', async () => {
+      const adminEmail = process.env.ADMIN_EMAIL!;
+
       const result = await service.login({
-        email: process.env.ADMIN_EMAIL!,
+        email: adminEmail,
         password: process.env.ADMIN_PASSWORD!,
       });
 
-      expect(result.user).toEqual({
-        id: expect.any(String),
-        name: 'Administrador',
-        email: process.env.ADMIN_EMAIL,
-      });
-
+      expect(result.user).toEqual(
+        expect.objectContaining({
+          name: 'Administrador',
+          email: adminEmail,
+        }),
+      );
+      expect(result.user.id).toEqual(expect.any(String));
+      expect(result.user.id).not.toBe('');
       expect(result.accessToken).toEqual(expect.any(String));
+      expect(result.accessToken).not.toBe('');
     });
 
     it('should reject invalid password', async () => {
