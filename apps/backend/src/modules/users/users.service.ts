@@ -15,4 +15,10 @@ export class UsersService {
 
     return user;
   }
+
+  async findById(id: string): Promise<User | null> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    return user;
+  }
 }
