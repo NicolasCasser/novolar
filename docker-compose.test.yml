@@ -43,7 +43,7 @@ services:
       - postgres-test
     command: >
       sh -c "
-        npm install &&
+        npm ci &&
         npm run migration:test:run &&
         npm run seed:test:admin &&
         tail -f /dev/null
