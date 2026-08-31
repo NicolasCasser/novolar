@@ -19,11 +19,16 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:integration": "jest --config ./test/jest-integration.json",
     "migration": "node -r ts-node/register -r tsconfig-paths/register ../../node_modules/typeorm/cli.js",
     "migration:generate": "npm run migration -- migration:generate",
     "migration:run": "npm run migration -- migration:run",
     "migration:revert": "npm run migration -- migration:revert",
-    "migration:show": "npm run migration -- migration:show"
+    "migration:show": "npm run migration -- migration:show",
+    "migration:test": "node -r ts-node/register -r tsconfig-paths/register ../../node_modules/typeorm/cli.js",
+    "migration:test:run": "npm run migration:test -- migration:run -d test/data-source.ts",
+    "seed:admin": "node -r ts-node/register -r tsconfig-paths/register src/database/seeds/admin.seed.ts",
+    "seed:test:admin": "node -r ts-node/register -r tsconfig-paths/register test/seeds/admin.seed.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.13.0",
@@ -32,10 +37,19 @@
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
     "@nestjs/graphql": "^13.4.2",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.3",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.1",
     "graphql": "^16.14.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "pg": "^8.23.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -47,9 +61,11 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",
+    "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -73,6 +89,9 @@
       "ts"
     ],
     "rootDir": "src",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

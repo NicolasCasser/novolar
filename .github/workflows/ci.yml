@@ -5,11 +5,28 @@ on:
     branches:
       - main
       - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   validate:
     name: Validate project
     runs-on: ubuntu-latest
+
+    env:
+      TEST_POSTGRES_DB: novolar_test
+      TEST_POSTGRES_USER: postgres
+      TEST_POSTGRES_PASSWORD: postgres
+      TEST_POSTGRES_PORT: 5433
+      TEST_POSTGRES_SSL: false
+      JWT_SECRET: test-secret
+      JWT_EXPIRES_IN: 3600
+      ADMIN_EMAIL: admin@novolar.local
+      ADMIN_PASSWORD: admin123
+      LOCAL_UID: 1000
+      LOCAL_GID: 1000
 
     steps:
       - name: Checkout repository
@@ -27,8 +44,21 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test
+      - name: Unit tests
         run: npm run test
+
+      - name: Start test environment
+        run: docker compose -f docker-compose.test.yml up -d
+
+      - name: Integration tests
+        run: npm run test:integration
+
+      - name: E2E tests
+        run: npm run test:e2e
 
       - name: Build
         run: npm run build
+
+      - name: Stop test environment
+        if: always()
+        run: docker compose -f docker-compose.test.yml down -v
