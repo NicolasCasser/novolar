@@ -20,6 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
       driver: ApolloDriver,
       autoSchemaFile: true,
       sortSchema: true,
+      context: ({ req, res }) => ({ req, res }),
     }),
 
     DataBaseModule,

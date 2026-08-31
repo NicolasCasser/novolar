@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from 'src/app.module';
 import request from 'supertest';
 import { Server } from 'http';
+import cookieParser from 'cookie-parser';
 
 type GraphQLResponse<T> = {
   data?: T | null;
@@ -18,7 +19,6 @@ type LoginResponse = {
       name: string;
       email: string;
     };
-    accessToken: string;
   };
 };
 
@@ -31,6 +31,8 @@ describe('Auth E2E', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    app.use(cookieParser());
 
     await app.init();
   });
@@ -60,7 +62,6 @@ describe('Auth E2E', () => {
                 name
                 email
               }
-              accessToken
             }
           }
         `,
@@ -70,14 +71,23 @@ describe('Auth E2E', () => {
     const body = response.body as GraphQLResponse<LoginResponse>;
 
     expect(body.errors).toBeUndefined();
+
     expect(body.data?.login.user).toEqual(
       expect.objectContaining({
         name: 'Administrador',
         email: process.env.ADMIN_EMAIL,
       }),
     );
-    expect(body.data?.login.accessToken).toBeDefined();
-    expect(body.data?.login.accessToken).not.toBe('');
+
+    expect(body.data?.login.user.id).toEqual(expect.any(String));
+    expect(body.data?.login.user.id).not.toBe('');
+
+    expect(response.headers['set-cookie']).toBeDefined();
+    expect(response.headers['set-cookie']).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('accessToken='),
+      ]),
+    );
   });
 
   it('should reject login with invalid password', async () => {
@@ -97,7 +107,6 @@ describe('Auth E2E', () => {
                 name
                 email
               }
-              accessToken
             }
           }
         `,
@@ -109,6 +118,8 @@ describe('Auth E2E', () => {
     expect(body.data).toBeNull();
     expect(body.errors).toBeDefined();
     expect(body.errors?.[0].message).toBe('Invalid Credentials');
+
+    expect(response.headers['set-cookie']).toBeUndefined();
   });
 
   it('should reject login with non-existent user', async () => {
@@ -128,7 +139,6 @@ describe('Auth E2E', () => {
                 name
                 email
               }
-              accessToken
             }
           }
         `,
@@ -140,5 +150,160 @@ describe('Auth E2E', () => {
     expect(body.data).toBeNull();
     expect(body.errors).toBeDefined();
     expect(body.errors?.[0].message).toBe('Invalid Credentials');
+
+    expect(response.headers['set-cookie']).toBeUndefined();
+  });
+
+  it('should return the authenticated user', async () => {
+    const loginResponse = await request(app.getHttpServer() as Server)
+      .post('/graphql')
+      .send({
+        query: `
+          mutation {
+            login(
+              input: {
+                email: "${process.env.ADMIN_EMAIL}"
+                password: "${process.env.ADMIN_PASSWORD}"
+              }
+            ) {
+              user {
+                id
+                name
+                email
+              }
+            }
+          }
+        `,
+      })
+      .expect(200);
+
+    const cookies = loginResponse.headers['set-cookie'] as unknown as string[];
+
+    expect(cookies).toBeDefined();
+
+    const accessTokenCookie = cookies?.find((cookie) =>
+      cookie.startsWith('accessToken='),
+    );
+
+    expect(accessTokenCookie).toBeDefined();
+
+    const meResponse = await request(app.getHttpServer() as Server)
+      .post('/graphql')
+      .set('Cookie', accessTokenCookie!.split(';')[0])
+      .send({
+        query: `
+          query {
+            me {
+              id
+              name
+              email
+            }
+          }
+        `,
+      })
+      .expect(200);
+
+    const body = meResponse.body as GraphQLResponse<{
+      me: {
+        id: string;
+        name: string;
+        email: string;
+      };
+    }>;
+
+    expect(body.errors).toBeUndefined();
+
+    expect(body.data?.me).toEqual(
+      expect.objectContaining({
+        name: 'Administrador',
+        email: process.env.ADMIN_EMAIL,
+      }),
+    );
+
+    expect(body.data?.me.id).toEqual(expect.any(String));
+  });
+
+  it('should reject unauthenticated user', async () => {
+    const response = await request(app.getHttpServer() as Server)
+      .post('/graphql')
+      .send({
+        query: `
+          query {
+            me {
+              id
+              name
+              email
+            }
+          }
+        `,
+      })
+      .expect(200);
+
+    const body = response.body as GraphQLResponse<{
+      me: {
+        id: string;
+        name: string;
+        email: string;
+      };
+    }>;
+
+    expect(body.data).toBeNull();
+    expect(body.errors).toBeDefined();
+  });
+
+  it('should reject invalid access token', async () => {
+    const response = await request(app.getHttpServer() as Server)
+      .post('/graphql')
+      .set('Cookie', 'accessToken=invalid-token')
+      .send({
+        query: `
+          query {
+            me {
+              id
+              name
+              email
+            }
+          }
+        `,
+      })
+      .expect(200);
+
+    const body = response.body as GraphQLResponse<{
+      me: {
+        id: string;
+        name: string;
+        email: string;
+      };
+    }>;
+
+    expect(body.data).toBeNull();
+    expect(body.errors).toBeDefined();
+  });
+
+  it('should logout successfully', async () => {
+    const response = await request(app.getHttpServer() as Server)
+      .post('/graphql')
+      .send({
+        query: `
+          mutation {
+            logout
+          }
+        `,
+      })
+      .expect(200);
+
+    const body = response.body as GraphQLResponse<{
+      logout: boolean;
+    }>;
+
+    expect(body.errors).toBeUndefined();
+    expect(body.data?.logout).toBe(true);
+
+    expect(response.headers['set-cookie']).toBeDefined();
+    expect(response.headers['set-cookie']).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('accessToken=;'),
+      ]),
+    );
   });
 });

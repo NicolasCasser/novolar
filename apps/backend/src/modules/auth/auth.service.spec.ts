@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
+import { User } from '../users/entities/user.entity';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -41,7 +42,7 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
   });
 
-  describe('validadeUser', () => {
+  describe('validateUser', () => {
     it('should return the user when the user exists', async () => {
       const user = {
         id: '123',
@@ -78,7 +79,6 @@ describe('AuthService', () => {
 
       usersServiceMock.findByEmail.mockResolvedValue(user);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-      jwtServiceMock.sign.mockReturnValue('access-token');
 
       const input = {
         email: 'admin@example.com',
@@ -87,26 +87,16 @@ describe('AuthService', () => {
 
       const result = await service.login(input);
 
-      expect(result).toEqual({
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        },
-        accessToken: 'access-token',
-      });
+      expect(result).toEqual(user);
 
-      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith(input.email);
+      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith(
+        input.email,
+      );
 
       expect(bcrypt.compare).toHaveBeenCalledWith(
         input.password,
         user.password,
       );
-
-      expect(jwtServiceMock.sign).toHaveBeenCalledWith({
-        sub: user.id,
-        email: user.email,
-      });
     });
 
     it('should throw when the user does not exist', async () => {
@@ -144,6 +134,32 @@ describe('AuthService', () => {
       );
 
       expect(jwtServiceMock.sign).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('generateAccessToken', () => {
+    it('should generate an access token', () => {
+      const user = {
+        id: '123',
+        name: 'Admin',
+        email: 'admin@example.com',
+        password: 'hashed-password',
+        animals: [],
+        deletedAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      jwtServiceMock.sign.mockReturnValue('access-token');
+
+      const result = service.generateAccessToken(user);
+
+      expect(result).toBe('access-token');
+
+      expect(jwtServiceMock.sign).toHaveBeenCalledWith({
+        sub: user.id,
+        email: user.email,
+      });
     });
   });
 });

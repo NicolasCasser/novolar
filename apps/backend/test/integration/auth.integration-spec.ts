@@ -31,16 +31,15 @@ describe('AuthService Integration', () => {
         password: process.env.ADMIN_PASSWORD!,
       });
 
-      expect(result.user).toEqual(
+      expect(result).toEqual(
         expect.objectContaining({
           name: 'Administrador',
           email: adminEmail,
         }),
       );
-      expect(result.user.id).toEqual(expect.any(String));
-      expect(result.user.id).not.toBe('');
-      expect(result.accessToken).toEqual(expect.any(String));
-      expect(result.accessToken).not.toBe('');
+
+      expect(result.id).toEqual(expect.any(String));
+      expect(result.id).not.toBe('');
     });
 
     it('should reject invalid password', async () => {
@@ -59,6 +58,20 @@ describe('AuthService Integration', () => {
           password: 'password',
         }),
       ).rejects.toThrow('Invalid Credentials');
+    });
+  });
+
+  describe('generateAccessToken', () => {
+    it('should generate an access token for a valid user', async () => {
+      const user = await service.login({
+        email: process.env.ADMIN_EMAIL!,
+        password: process.env.ADMIN_PASSWORD!,
+      });
+
+      const result = service.generateAccessToken(user);
+
+      expect(result).toEqual(expect.any(String));
+      expect(result).not.toBe('');
     });
   });
 });

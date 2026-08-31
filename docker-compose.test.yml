@@ -38,14 +38,17 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     volumes:
       - ./apps/backend:/app/apps/backend
+      - backend_node_modules:/app/node_modules
     depends_on:
       - postgres-test
     command: >
       sh -c "
+        npm install &&
         npm run migration:test:run &&
-        npm run seed:test:admin
+        npm run seed:test:admin &&
         tail -f /dev/null
       "
 
 volumes:
   postgres_test_data:
+  backend_node_modules:

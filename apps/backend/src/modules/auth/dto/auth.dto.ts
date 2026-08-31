@@ -5,7 +5,4 @@ import { UserDTO } from 'src/modules/users/dto/user.dto';
 export class AuthDTO {
   @Field(() => UserDTO)
   user: UserDTO;
-
-  @Field()
-  accessToken: string;
 }
