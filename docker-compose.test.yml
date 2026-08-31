@@ -8,6 +8,11 @@ services:
       POSTGRES_PASSWORD: ${TEST_POSTGRES_PASSWORD}
     ports:
       - '${TEST_POSTGRES_PORT}:5432'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TEST_POSTGRES_USER} -d ${TEST_POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
 
@@ -40,14 +45,8 @@ services:
       - ./apps/backend:/app/apps/backend
       - backend_node_modules:/app/node_modules
     depends_on:
-      - postgres-test
-    command: >
-      sh -c "
-        npm ci &&
-        npm run migration:test:run &&
-        npm run seed:test:admin &&
-        tail -f /dev/null
-      "
+      postgres-test:
+        condition: service_healthy
 
 volumes:
   postgres_test_data:
