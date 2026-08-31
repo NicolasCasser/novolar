@@ -62,6 +62,6 @@ export class AuthResolver {
       sameSite: 'lax',
     });
 
-    return true
+    return true;
   }
 }

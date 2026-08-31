@@ -65,22 +65,22 @@ describe('AuthResolver', () => {
 
       expect(result).toEqual(authResponse);
 
-      expect(authServiceMock.login).toHaveBeenCalledWith(input);
-      expect(authServiceMock.login).toHaveBeenCalledTimes(1);
+      const loginMock = authServiceMock.login;
+      const generateAccessTokenMock = authServiceMock.generateAccessToken;
+      const cookieMock = responseMock.cookie;
 
-      expect(authServiceMock.generateAccessToken).toHaveBeenCalledWith(user);
-      expect(authServiceMock.generateAccessToken).toHaveBeenCalledTimes(1);
+      expect(loginMock).toHaveBeenCalledWith(input);
+      expect(loginMock).toHaveBeenCalledTimes(1);
 
-      expect(responseMock.cookie).toHaveBeenCalledWith(
-        'accessToken',
-        'access-token',
-        {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: 1000 * 60 * 60,
-        },
-      );
+      expect(generateAccessTokenMock).toHaveBeenCalledWith(user);
+      expect(generateAccessTokenMock).toHaveBeenCalledTimes(1);
+
+      expect(cookieMock).toHaveBeenCalledWith('accessToken', 'access-token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60,
+      });
     });
 
     it('should propagate authentication errors', async () => {
@@ -93,15 +93,19 @@ describe('AuthResolver', () => {
         new UnauthorizedException('Invalid Credentials'),
       );
 
-      await expect(
-        resolver.login(input, contextMock),
-      ).rejects.toThrow(UnauthorizedException);
+      await expect(resolver.login(input, contextMock)).rejects.toThrow(
+        UnauthorizedException,
+      );
 
-      expect(authServiceMock.login).toHaveBeenCalledWith(input);
-      expect(authServiceMock.login).toHaveBeenCalledTimes(1);
+      const loginMock = authServiceMock.login;
+      const generateAccessTokenMock = authServiceMock.generateAccessToken;
+      const cookieMock = responseMock.cookie;
 
-      expect(authServiceMock.generateAccessToken).not.toHaveBeenCalled();
-      expect(responseMock.cookie).not.toHaveBeenCalled();
+      expect(loginMock).toHaveBeenCalledWith(input);
+      expect(loginMock).toHaveBeenCalledTimes(1);
+
+      expect(generateAccessTokenMock).not.toHaveBeenCalled();
+      expect(cookieMock).not.toHaveBeenCalled();
     });
   });
 
@@ -109,16 +113,15 @@ describe('AuthResolver', () => {
     it('should clear the access token cookie', () => {
       const result = resolver.logout(contextMock);
 
+      const clearCookieMock = responseMock.clearCookie;
+
       expect(result).toBe(true);
 
-      expect(responseMock.clearCookie).toHaveBeenCalledWith(
-        'accessToken',
-        {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-        },
-      );
+      expect(clearCookieMock).toHaveBeenCalledWith('accessToken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+      });
     });
   });
 

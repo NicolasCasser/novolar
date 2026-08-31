@@ -50,9 +50,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  async function handleSubmit(
-    event: React.SubmitEvent<HTMLFormElement>,
-  ) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
@@ -95,11 +93,7 @@ function Login() {
 
       <section className="login-branding">
         <div className="login-brand">
-          <img
-            src={logo}
-            alt="Logo NovoLar"
-            className="login-brand__logo"
-          />
+          <img src={logo} alt="Logo NovoLar" className="login-brand__logo" />
         </div>
 
         <img
@@ -112,9 +106,8 @@ function Login() {
           <h1>Compromisso com o Bem-Estar</h1>
 
           <p>
-            Nossa plataforma administrativa garante que cada animal receba
-            a atenção e o cuidado necessários para encontrar seu lar
-            definitivo.
+            Nossa plataforma administrativa garante que cada animal receba a
+            atenção e o cuidado necessários para encontrar seu lar definitivo.
           </p>
         </div>
       </section>
@@ -132,9 +125,7 @@ function Login() {
               <h2>Acesso administrativo</h2>
             </div>
 
-            <p>
-              Entre para gerenciar os animais e solicitações de adoção.
-            </p>
+            <p>Entre para gerenciar os animais e solicitações de adoção.</p>
           </div>
 
           <form className="login-form" onSubmit={handleSubmit}>
@@ -176,9 +167,7 @@ function Login() {
                 className="login-password-toggle"
                 onClick={() => setShowPassword((current) => !current)}
                 disabled={loading}
-                aria-label={
-                  showPassword ? 'Ocultar senha' : 'Mostrar senha'
-                }
+                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
               >
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
@@ -187,9 +176,7 @@ function Login() {
             <button type="submit" disabled={loading}>
               {loading ? 'Entrando...' : 'Entrar'}
 
-              {!loading && (
-                <ArrowRight className="login-button__icon" />
-              )}
+              {!loading && <ArrowRight className="login-button__icon" />}
             </button>
           </form>
 

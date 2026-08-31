@@ -84,9 +84,7 @@ describe('Auth E2E', () => {
 
     expect(response.headers['set-cookie']).toBeDefined();
     expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken='),
-      ]),
+      expect.arrayContaining([expect.stringContaining('accessToken=')]),
     );
   });
 
@@ -301,9 +299,7 @@ describe('Auth E2E', () => {
 
     expect(response.headers['set-cookie']).toBeDefined();
     expect(response.headers['set-cookie']).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining('accessToken=;'),
-      ]),
+      expect.arrayContaining([expect.stringContaining('accessToken=;')]),
     );
   });
 });

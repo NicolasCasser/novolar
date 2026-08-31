@@ -4,7 +4,6 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
-import { User } from '../users/entities/user.entity';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),
@@ -89,9 +88,7 @@ describe('AuthService', () => {
 
       expect(result).toEqual(user);
 
-      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith(
-        input.email,
-      );
+      expect(usersServiceMock.findByEmail).toHaveBeenCalledWith(input.email);
 
       expect(bcrypt.compare).toHaveBeenCalledWith(
         input.password,
