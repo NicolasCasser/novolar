@@ -1,12 +1,6 @@
 import * as bcrypt from 'bcrypt';
-import { config } from 'dotenv';
-import { resolve } from 'path';
 import dataSource from '../data-source';
-import { User } from 'src/modules/users/entities/user.entity';
-
-config({
-  path: resolve(process.cwd(), '../../.env'),
-});
+import { User } from '../../modules/users/entities/user.entity';
 
 async function seedAdmin() {
   const email = process.env.ADMIN_EMAIL;
@@ -23,7 +17,9 @@ async function seedAdmin() {
   try {
     const userRepository = dataSource.getRepository(User);
 
-    const existingUser = await userRepository.findOne({ where: { email } });
+    const existingUser = await userRepository.findOne({
+      where: { email },
+    });
 
     if (existingUser) {
       console.log(`Admin user "${email}" already exists.`);
@@ -47,6 +43,6 @@ async function seedAdmin() {
 }
 
 seedAdmin().catch((error) => {
-  console.error('Error while create admin user:', error);
+  console.error('Error while creating admin user:', error);
   process.exit(1);
 });
