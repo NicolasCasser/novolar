@@ -17,10 +17,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: [
-      'http://localhost:5174',
-      'https://novolar-frontend.vercel.app',
-    ],
+    origin: ['http://localhost:5174', 'https://novolar-frontend.vercel.app'],
     credentials: true,
   });
 
