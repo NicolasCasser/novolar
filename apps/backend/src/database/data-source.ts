@@ -16,8 +16,8 @@ export default new DataSource({
 
   ssl: process.env.POSTGRES_SSL === 'true',
 
-  entities: ['src/**/*.entity.ts'],
-  migrations: ['src/database/migrations/*.ts'],
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
 
   synchronize: false,
 });

@@ -27,6 +27,8 @@
     "migration:show": "npm run migration -- migration:show",
     "migration:test": "node -r ts-node/register -r tsconfig-paths/register ../../node_modules/typeorm/cli.js",
     "migration:test:run": "npm run migration:test -- migration:run -d test/data-source.ts",
+    "migration:prod:run": "node ../../node_modules/typeorm/cli.js migration:run -d dist/database/data-source.js",
+    "seed:prod": "node dist/database/seeds/admin.seed.js",
     "seed:admin": "node -r ts-node/register -r tsconfig-paths/register src/database/seeds/admin.seed.ts",
     "seed:test:admin": "node -r ts-node/register -r tsconfig-paths/register test/seeds/admin.seed.ts"
   },
