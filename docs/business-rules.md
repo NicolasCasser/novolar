@@ -12,14 +12,14 @@ Este documento complementa os requisitos funcionais, casos de uso e modelagem de
 
 As regras descritas neste documento abrangem:
 
-- gerenciamento dos animais;
-- gerenciamento das imagens dos animais;
-- gerenciamento das solicitações de adoção;
-- catálogo público;
-- autenticação administrativa;
-- integridade dos dados;
-- processo de adoção;
-- exclusão lógica dos registros.
+* gerenciamento dos animais;
+* gerenciamento das imagens dos animais;
+* gerenciamento das solicitações de adoção;
+* catálogo público;
+* autenticação administrativa;
+* integridade dos dados;
+* processo de adoção;
+* exclusão lógica dos registros.
 
 Questões relacionadas à interface, tecnologias e arquitetura encontram-se documentadas em seus respectivos arquivos.
 
@@ -31,19 +31,19 @@ Questões relacionadas à interface, tecnologias e arquitetura encontram-se docu
 
 Todo animal cadastrado deverá possuir obrigatoriamente:
 
-- Nome;
-- Espécie;
-- Raça;
-- Sexo;
-- Porte;
-- Cor;
-- Idade;
-- Estado;
-- Cidade;
-- Descrição;
-- Informação sobre vacinação;
-- Informação sobre castração;
-- Pelo menos uma imagem.
+* Nome;
+* Espécie;
+* Raça;
+* Sexo;
+* Porte;
+* Cor;
+* Idade;
+* Estado;
+* Cidade;
+* Descrição;
+* Informação sobre vacinação;
+* Informação sobre castração;
+* Pelo menos uma imagem.
 
 ---
 
@@ -61,11 +61,11 @@ A raça será armazenada como texto, permitindo tanto raças específicas quanto
 
 A espécie deverá ser selecionada a partir dos valores definidos pelo enum `AnimalSpecies`:
 
-- DOG;
-- CAT;
-- BIRD;
-- RABBIT;
-- OTHER.
+* DOG;
+* CAT;
+* BIRD;
+* RABBIT;
+* OTHER.
 
 ---
 
@@ -79,10 +79,12 @@ Todo animal cadastrado deverá possuir o status **AVAILABLE** no momento de sua 
 
 O status de um animal poderá assumir somente os seguintes valores:
 
-- AVAILABLE — disponível para adoção;
-- ADOPTED — adotado.
+* **AVAILABLE** — disponível para adoção;
+* **ADOPTED** — adotado.
 
 Um animal deverá passar automaticamente para `ADOPTED` quando uma de suas solicitações de adoção for aprovada.
+
+O status do animal não deverá ser alterado manualmente para valores diferentes dos definidos pelo processo de adoção.
 
 ---
 
@@ -144,8 +146,8 @@ Uma imagem não poderá existir sem um animal associado.
 
 Todo animal deverá possuir informações sobre:
 
-- vacinação;
-- castração.
+* vacinação;
+* castração.
 
 Essas informações deverão ser armazenadas como valores booleanos.
 
@@ -179,12 +181,12 @@ Uma solicitação de adoção somente poderá ser registrada para um animal com 
 
 Toda solicitação deverá conter obrigatoriamente:
 
-- Nome do interessado;
-- E-mail;
-- Telefone/WhatsApp;
-- Estado;
-- Cidade;
-- Mensagem de interesse.
+* Nome do interessado;
+* E-mail;
+* Telefone/WhatsApp;
+* Estado;
+* Cidade;
+* Mensagem de interesse.
 
 ---
 
@@ -198,23 +200,33 @@ Toda solicitação deverá ser criada com o status **PENDING**.
 
 Uma solicitação poderá possuir somente um dos seguintes status:
 
-- PENDING — solicitação aguardando início da análise;
-- IN_ANALYSIS — administrador entrou em contato com o interessado e iniciou o processo de avaliação;
-- APPROVED — solicitação aprovada;
-- REJECTED — solicitação rejeitada;
-- CANCELED — solicitação cancelada porque outra solicitação referente ao mesmo animal foi aprovada.
+* **PENDING** — solicitação recebida e ainda não iniciada pelo administrador;
+* **IN_ANALYSIS** — administrador iniciou o contato e o processo de avaliação do interessado;
+* **APPROVED** — solicitação aprovada e processo de adoção concluído;
+* **REJECTED** — solicitação recusada durante o processo de avaliação;
+* **CANCELED** — solicitação cancelada porque outra solicitação referente ao mesmo animal foi aprovada.
 
 ---
 
 ### RN19 — Alteração do status da solicitação
 
-A alteração dos status das solicitações será realizada exclusivamente por administradores autenticados, exceto pelas alterações automáticas previstas nas regras do processo de adoção.
+A alteração do status das solicitações será realizada exclusivamente por administradores autenticados, exceto pelas alterações automáticas previstas no processo de adoção.
 
-O administrador poderá alterar uma solicitação entre os estados permitidos pelo fluxo definido para o sistema.
+As transições permitidas são:
+
+* `PENDING` → `IN_ANALYSIS`;
+* `PENDING` → `APPROVED`;
+* `PENDING` → `REJECTED`;
+* `IN_ANALYSIS` → `APPROVED`;
+* `IN_ANALYSIS` → `REJECTED`.
+
+O status `CANCELED` será atribuído automaticamente pelo sistema quando outra solicitação do mesmo animal for aprovada.
+
+Solicitações em estados finais não deverão retornar para estados anteriores.
 
 ---
 
-### RN20 — Fluxo de análise
+### RN20 — Início da análise
 
 O status `IN_ANALYSIS` deverá ser utilizado quando o administrador entrar em contato com o interessado e iniciar o processo de avaliação da solicitação.
 
@@ -232,7 +244,7 @@ A existência de uma solicitação em análise não impedirá o recebimento de n
 
 ### RN22 — Aprovação de solicitação
 
-Uma solicitação somente poderá ser aprovada por um administrador autenticado.
+Uma solicitação somente poderá ser aprovada por um administrador autenticado e enquanto estiver com status `PENDING` ou `IN_ANALYSIS`.
 
 Ao aprovar uma solicitação:
 
@@ -248,18 +260,20 @@ Quando uma solicitação for aprovada, as demais solicitações relacionadas ao 
 
 Somente solicitações com status:
 
-- `PENDING`;
-- `IN_ANALYSIS`;
+* `PENDING`;
+* `IN_ANALYSIS`;
 
 deverão ser alteradas automaticamente para `CANCELED`.
 
-Solicitações que já estejam `REJECTED` não deverão ser alteradas.
+Solicitações que já estejam `APPROVED`, `REJECTED` ou `CANCELED` não deverão ser alteradas.
 
 ---
 
 ### RN24 — Rejeição de solicitação
 
 A rejeição de uma solicitação deverá alterar somente o status da própria solicitação para `REJECTED`.
+
+A rejeição somente poderá ocorrer enquanto a solicitação estiver com status `PENDING` ou `IN_ANALYSIS`.
 
 As demais solicitações relacionadas ao mesmo animal não deverão ser alteradas automaticamente.
 
@@ -307,7 +321,9 @@ A validação deverá utilizar os dados disponibilizados pela API oficial do IBG
 
 ### RN30 — Confirmação da solicitação
 
-Após o registro de uma solicitação de adoção, o sistema deverá enviar um e-mail de confirmação ao interessado contendo um resumo da solicitação realizada.
+Após o registro de uma solicitação de adoção, o sistema poderá enviar um e-mail de confirmação ao interessado contendo um resumo da solicitação realizada.
+
+O envio do e-mail não deverá ser condição para que a solicitação seja registrada.
 
 ---
 
@@ -321,7 +337,7 @@ A análise e o gerenciamento das solicitações de adoção serão realizados ex
 
 ### RN32 — Animais exibidos
 
-O catálogo público deverá exibir somente animais com status `AVAILABLE`.
+O catálogo público deverá exibir somente animais com status `AVAILABLE` e que não tenham sido removidos logicamente.
 
 Animais com status `ADOPTED` ou removidos logicamente não deverão aparecer no catálogo de animais disponíveis.
 
@@ -337,12 +353,12 @@ O catálogo deverá permitir a pesquisa de animais pelo nome.
 
 O catálogo deverá permitir filtrar animais por:
 
-- Espécie;
-- Porte;
-- Sexo;
-- Idade;
-- Estado;
-- Cidade.
+* Espécie;
+* Porte;
+* Sexo;
+* Idade;
+* Estado;
+* Cidade.
 
 ---
 
@@ -358,8 +374,8 @@ As cidades disponibilizadas como opção de filtro deverão corresponder ao esta
 
 O catálogo deverá permitir a ordenação dos animais por:
 
-- Mais recentes;
-- Idade.
+* Mais recentes;
+* Idade.
 
 ---
 
@@ -379,7 +395,7 @@ A página de detalhes deverá apresentar todas as informações públicas dispon
 
 Caso um animal deixe de estar disponível para adoção, ele não deverá mais aparecer no catálogo de animais disponíveis.
 
-O acesso público aos seus detalhes deverá respeitar o status atual do animal.
+O acesso público aos seus detalhes deverá respeitar o status atual do animal, não permitindo o início de uma nova solicitação quando o animal estiver `ADOPTED`.
 
 ---
 
@@ -395,7 +411,7 @@ A área administrativa deverá ser acessível somente por usuários autenticados
 
 Na primeira versão do sistema existirá somente um perfil de usuário:
 
-- Administrador.
+* Administrador.
 
 Não haverá diferentes níveis de permissão entre administradores.
 
@@ -406,6 +422,8 @@ Não haverá diferentes níveis de permissão entre administradores.
 O acesso administrativo deverá ser realizado por meio de e-mail e senha.
 
 Após a validação bem-sucedida das credenciais, o sistema deverá conceder acesso às funcionalidades administrativas.
+
+A autenticação deverá utilizar JWT armazenado em cookie `HttpOnly`.
 
 ---
 
@@ -419,12 +437,14 @@ Não poderá existir mais de um administrador utilizando o mesmo endereço de e-
 
 As seguintes funcionalidades deverão estar disponíveis exclusivamente para administradores autenticados:
 
-- cadastro de animais;
-- edição de animais;
-- exclusão de animais;
-- alteração dos status dos animais, quando aplicável;
-- visualização de solicitações;
-- alteração dos status das solicitações.
+* cadastro de animais;
+* edição de animais;
+* gerenciamento das imagens dos animais;
+* exclusão de animais;
+* visualização de solicitações;
+* alteração dos status das solicitações.
+
+A alteração do status dos animais ocorrerá automaticamente de acordo com o processo de adoção.
 
 ---
 
@@ -442,8 +462,8 @@ Registros removidos logicamente não deverão ser considerados nos indicadores.
 
 Um animal não poderá ser removido enquanto possuir solicitações com status:
 
-- `PENDING`;
-- `IN_ANALYSIS`.
+* `PENDING`;
+* `IN_ANALYSIS`.
 
 Solicitações com status `APPROVED`, `REJECTED` ou `CANCELED` não impedirão a exclusão lógica do animal, pois representam histórico encerrado.
 
@@ -477,9 +497,9 @@ Um animal não poderá possuir mais de cinco imagens cadastradas.
 
 As seguintes relações deverão ser obrigatoriamente respeitadas:
 
-- Todo animal pertence a um administrador;
-- Toda imagem pertence a um animal;
-- Toda solicitação pertence a um animal.
+* Todo animal pertence a um administrador;
+* Toda imagem pertence a um animal;
+* Toda solicitação pertence a um animal.
 
 ---
 
@@ -505,6 +525,8 @@ O sistema não deverá armazenar senhas em texto puro.
 
 As funcionalidades administrativas deverão exigir autenticação baseada em JWT.
 
+O token de autenticação deverá ser armazenado em cookie `HttpOnly`, impedindo seu acesso direto por JavaScript no navegador.
+
 ---
 
 ### RN54 — Dados dos interessados
@@ -513,21 +535,9 @@ Os dados fornecidos pelos interessados nas solicitações de adoção deverão s
 
 ---
 
-### RN55 — Observações administrativas
+# 9. Processo de Adoção
 
-Caso sejam implementadas observações internas relacionadas às solicitações de adoção, essas informações deverão ser acessíveis exclusivamente aos administradores autenticados.
-
----
-
-# 9. Regras do Processo de Adoção
-
-### RN56 — Disponibilidade para solicitação
-
-Somente animais com status `AVAILABLE` poderão receber novas solicitações de adoção.
-
----
-
-### RN57 — Processo de análise
+### RN55 — Processo de análise
 
 Uma solicitação inicialmente permanecerá com status `PENDING`.
 
@@ -535,19 +545,19 @@ Quando o administrador entrar em contato com o interessado e iniciar o processo 
 
 ---
 
-### RN58 — Aprovação e adoção
+### RN56 — Aprovação e adoção
 
 A aprovação de uma solicitação representa a decisão de realizar a adoção daquele animal.
 
 Ao aprovar uma solicitação:
 
-- a solicitação passa para `APPROVED`;
-- o animal passa automaticamente para `ADOPTED`;
-- as demais solicitações `PENDING` ou `IN_ANALYSIS` do mesmo animal passam para `CANCELED`.
+* a solicitação passa para `APPROVED`;
+* o animal passa automaticamente para `ADOPTED`;
+* as demais solicitações `PENDING` ou `IN_ANALYSIS` do mesmo animal passam para `CANCELED`.
 
 ---
 
-### RN59 — Rejeição
+### RN57 — Rejeição
 
 A rejeição de uma solicitação não altera o status do animal nem das demais solicitações.
 
@@ -555,7 +565,7 @@ A solicitação rejeitada passa para `REJECTED`.
 
 ---
 
-### RN60 — Cancelamento automático
+### RN58 — Cancelamento automático
 
 O status `CANCELED` será utilizado quando uma solicitação deixar de ser válida porque outra solicitação referente ao mesmo animal foi aprovada.
 
@@ -563,7 +573,7 @@ O cancelamento automático deverá ocorrer somente para solicitações `PENDING`
 
 ---
 
-### RN61 — Encerramento do processo
+### RN59 — Encerramento do processo
 
 Após a aprovação de uma solicitação, o animal será considerado adotado e não poderá receber novas solicitações.
 
@@ -583,19 +593,20 @@ Novas funcionalidades ou alterações de escopo deverão ser refletidas também 
 
 As seguintes funcionalidades ou decisões não fazem parte da primeira versão e não deverão ser introduzidas na implementação sem uma decisão específica:
 
-- criação de usuários adotantes;
-- login para visitantes;
-- agendamento de visitas;
-- chat;
-- integração com WhatsApp;
-- notificações em tempo real;
-- gerenciamento de voluntários;
-- múltiplos níveis de administradores;
-- status adicional para animais além de `AVAILABLE` e `ADOPTED`.
+* criação de usuários adotantes;
+* login para visitantes;
+* agendamento de visitas;
+* chat;
+* integração com WhatsApp;
+* notificações em tempo real;
+* gerenciamento de voluntários;
+* múltiplos níveis de administradores;
+* status adicional para animais além de `AVAILABLE` e `ADOPTED`.
 
 ## Histórico de Revisões
 
-| Data       | Versão | Alterações |
-| ---------- | ------ | ---------- |
-| 06/08/2026 | 1.0    | Criação inicial do documento de regras de negócio. |
-| 11/08/2026 | 1.1    | Revisão e alinhamento das regras com requisitos, casos de uso e modelagem de dados. |
+| Data       | Versão | Alterações                                                                                                                     |
+| ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| 06/08/2026 | 1.0    | Criação inicial do documento de regras de negócio.                                                                             |
+| 11/08/2026 | 1.1    | Revisão e alinhamento das regras com requisitos, casos de uso e modelagem de dados.                                            |
+| 02/09/2026 | 1.2    | Revisão geral e consolidação das regras de negócio, com alinhamento aos requisitos, casos de uso e decisões atuais do projeto. |

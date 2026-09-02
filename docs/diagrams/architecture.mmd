@@ -9,9 +9,10 @@ flowchart LR
 A[React + Vite] -->|GraphQL| B[NestJS]
 
 B --> C[TypeORM]
-
 C --> D[(PostgreSQL)]
 
 B --> E[Storage Service]
-
 E --> F[Storage Provider]
+
+B --> G[Locations Provider]
+G --> H[IBGE API]
