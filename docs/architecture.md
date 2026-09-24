@@ -10,14 +10,15 @@ As tecnologias e padrões escolhidos buscam atender aos requisitos acadêmicos d
 
 # Visão Geral
 
-A plataforma NovoLar é desenvolvida como um **monólito modular**, organizado em um **monorepositório (monorepo)**, utilizando arquitetura em camadas para promover baixo acoplamento, alta coesão e facilidade de manutenção.
+A plataforma NovoLar é desenvolvida como um **monólito modular**, organizado em um **monorrepositório (monorepo)**, utilizando arquitetura em camadas para promover baixo acoplamento, alta coesão e facilidade de manutenção.
 
 A aplicação é composta por:
 
 * Frontend Web desenvolvido em React;
 * Backend desenvolvido em NestJS;
 * Banco de dados PostgreSQL;
-* Comunicação entre frontend e backend utilizando GraphQL.
+* Comunicação entre frontend e backend utilizando GraphQL;
+* Camada de armazenamento de arquivos abstraída por meio de Providers.
 
 ---
 
@@ -32,20 +33,47 @@ O diagrama de arquitetura está disponível em:
 * [`architecture.mmd`](./diagrams/architecture.mmd)
 * [`architecture.png`](./diagrams/architecture.png)
 
+A arquitetura lógica pode ser representada da seguinte forma:
+
+```mermaid
+---
+config:
+  look: neo
+  theme: redux
+  layout: dagre
+---
+flowchart LR
+
+A[React + Vite] -->|GraphQL| B[NestJS]
+
+B --> C[TypeORM]
+C --> D[(PostgreSQL)]
+
+B --> E[Storage Service]
+E --> F[Storage Provider]
+
+B --> G[Locations Provider]
+G --> H[IBGE API]
+```
+
 ---
 
 # Organização do Repositório
 
-O projeto é organizado em um monorepositório contendo frontend, backend e documentação.
+O projeto é organizado em um monorrepositório contendo frontend, backend e documentação.
 
 ```text
 novolar/
 
 ├── apps/
+
 │   ├── backend/
+
 │   └── frontend/
+
 │
 ├── docs/
+
 │   ├── diagrams/
 │   ├── requirements.md
 │   ├── use-cases.md
@@ -53,6 +81,7 @@ novolar/
 │   ├── database.md
 │   ├── architecture.md
 │   └── design-system.md
+
 │
 ├── docker-compose.yml
 ├── .env.example
@@ -83,12 +112,14 @@ Exemplo:
 src/
 
 ├── common/
-│
+
 └── modules/
+
     ├── auth/
     ├── users/
     ├── animals/
     ├── adoption-requests/
+    ├── files/
     └── locations/
 ```
 
@@ -106,13 +137,77 @@ O acesso aos dados é realizado utilizando os recursos de persistência fornecid
 
 A estrutura poderá ser expandida conforme novas necessidades do domínio sejam identificadas.
 
-## Integrações Externas
+---
+
+# Integrações Externas
 
 Dependências de serviços externos serão acessadas por meio de abstrações (Providers), evitando acoplamento da lógica de negócio a implementações específicas.
 
 O módulo `locations` será responsável por consultar e validar estados e municípios através da API oficial do IBGE. O restante da aplicação consumirá essa funcionalidade por meio da abstração definida pelo sistema, sem depender diretamente da fonte dos dados.
 
 Essa abordagem facilita testes, manutenção e futuras substituições de provedores sem impacto nas regras de negócio.
+
+---
+
+# Armazenamento de Arquivos
+
+O gerenciamento de arquivos é realizado por meio de um módulo genérico denominado `files`.
+
+A entidade `File` armazena os metadados do arquivo e uma chave (`storageKey`) utilizada para localizá-lo no provedor de armazenamento.
+
+O conteúdo binário dos arquivos não é armazenado diretamente no PostgreSQL.
+
+A comunicação com o mecanismo de armazenamento é realizada por meio de uma abstração denominada `StorageProvider`.
+
+A estrutura conceitual é:
+
+```text
+FilesService
+      ↓
+StorageProvider
+      ↓
+┌─────────────────────────┐
+│                         │
+▼                         ▼
+LocalStorageProvider   R2StorageProvider
+│                         │
+▼                         ▼
+Armazenamento local     Cloudflare R2
+```
+
+O `FilesService` é responsável pelas operações relacionadas ao gerenciamento dos arquivos, enquanto o `StorageProvider` encapsula os detalhes do mecanismo de armazenamento utilizado.
+
+Durante o desenvolvimento, poderá ser utilizado um armazenamento local para evitar dependência de serviços externos.
+
+Na primeira versão em produção, será utilizado o Cloudflare R2 como provedor de armazenamento de objetos, utilizando seu plano gratuito dentro dos limites disponíveis.
+
+A utilização de uma abstração permite substituir o provedor de armazenamento futuramente sem necessidade de alterações nas regras de negócio ou nas entidades que utilizam os arquivos.
+
+---
+
+# Relacionamento entre Arquivos e Animais
+
+As imagens dos animais não são armazenadas diretamente na entidade `Animal`.
+
+A associação entre um animal e um arquivo é representada pela entidade `AnimalImage`.
+
+A estrutura é:
+
+```text
+Animal
+   │
+   │ 1:N
+   ▼
+AnimalImage
+   │
+   │ N:1
+   ▼
+File
+```
+
+A entidade `AnimalImage` contém informações específicas da utilização do arquivo no contexto do animal, como `isPrimary`.
+
+A entidade `File`, por outro lado, permanece genérica e não possui conhecimento sobre o animal ao qual o arquivo está associado.
 
 ---
 
@@ -147,11 +242,12 @@ O banco de dados utilizado é o PostgreSQL.
 
 O acesso aos dados é realizado através do TypeORM.
 
-As entidades principais do sistema são:
+As principais entidades persistidas no sistema são:
 
 * User;
 * Animal;
 * AnimalImage;
+* File;
 * AdoptionRequest.
 
 Todas as entidades utilizam UUID como chave primária.
@@ -191,18 +287,6 @@ Após a autenticação, o JWT é armazenado em cookie `HttpOnly`, evitando que o
 
 ---
 
-# Armazenamento de Imagens
-
-As imagens dos animais são representadas pela entidade `AnimalImage`.
-
-A aplicação utiliza uma abstração para armazenamento de arquivos.
-
-Durante o desenvolvimento, o armazenamento pode ser realizado localmente.
-
-A arquitetura permanece preparada para utilização futura de diferentes provedores de armazenamento de objetos, sem necessidade de alterações na camada de domínio.
-
----
-
 # Containerização
 
 O ambiente de desenvolvimento utiliza Docker Compose.
@@ -212,6 +296,8 @@ Os principais serviços são:
 * Frontend;
 * Backend;
 * PostgreSQL.
+
+O armazenamento de arquivos utilizado durante o desenvolvimento pode permanecer local ao ambiente da aplicação.
 
 Essa abordagem garante maior padronização do ambiente e reduz problemas de configuração entre diferentes máquinas.
 
@@ -223,7 +309,8 @@ A estratégia de deploy da primeira versão utiliza serviços gerenciados e grat
 
 * Frontend hospedado na **Vercel**;
 * Backend hospedado no **Render**;
-* Banco de dados PostgreSQL hospedado no **Neon**.
+* Banco de dados PostgreSQL hospedado no **Neon**;
+* Arquivos armazenados no **Cloudflare R2**.
 
 A aplicação é preparada para que os componentes possam evoluir posteriormente para infraestruturas de maior escala sem alterações fundamentais na arquitetura.
 
@@ -280,6 +367,9 @@ Alterações destinadas à integração ao projeto devem passar pelo pipeline an
 | Validação Backend       | class-validator + class-transformer |
 | Validação Frontend      | React Hook Form + Zod               |
 | Containerização         | Docker + Docker Compose             |
+| Armazenamento local     | LocalStorageProvider                |
+| Armazenamento produção  | Cloudflare R2                       |
+| Abstração de storage    | StorageProvider                     |
 | Testes                  | Unitários + Integração + E2E        |
 | CI/CD                   | GitHub Actions                      |
 | Frontend em produção    | Vercel                              |

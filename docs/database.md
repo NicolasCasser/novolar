@@ -14,11 +14,12 @@ A modelagem foi desenvolvida considerando três objetivos principais:
 
 # Visão Geral
 
-A aplicação possui quatro entidades principais:
+A aplicação possui cinco entidades principais:
 
 * **User**: representa os administradores responsáveis pela gestão da plataforma.
 * **Animal**: representa os animais resgatados cadastrados na plataforma.
-* **AnimalImage**: representa as imagens associadas aos animais.
+* **AnimalImage**: representa a associação entre animais e seus arquivos de imagem.
+* **File**: representa um arquivo armazenado pela aplicação e seus metadados.
 * **AdoptionRequest**: representa as solicitações de adoção enviadas pelos interessados.
 
 Relacionamentos:
@@ -26,9 +27,13 @@ Relacionamentos:
 * Um administrador pode cadastrar vários animais.
 * Um animal pertence a um único administrador responsável pelo cadastro.
 * Um animal pode possuir várias imagens.
+* Cada associação de imagem pertence a um único animal.
+* Cada associação de imagem referencia um único arquivo.
+* Um arquivo pode ser referenciado por uma ou mais associações de imagens.
 * Um animal pode possuir várias solicitações de adoção.
-* Cada imagem pertence a um único animal.
 * Cada solicitação pertence a um único animal.
+
+A entidade **File** é genérica e não possui conhecimento sobre o domínio que utiliza o arquivo. Informações específicas da utilização do arquivo, como a definição de uma imagem como principal de um animal, pertencem à entidade **AnimalImage**.
 
 ---
 
@@ -121,29 +126,64 @@ Representa um animal resgatado cadastrado na plataforma.
 
 ## AnimalImage
 
-Representa uma imagem associada a um animal.
+Representa a associação entre um animal e um arquivo utilizado como sua imagem.
 
 ### Atributos
 
-| Campo     | Tipo      | Restrições   | Descrição                                 |
-| --------- | --------- | ------------ | ----------------------------------------- |
-| id        | UUID      | PK           | Identificador único.                      |
-| animalId  | UUID      | FK, NOT NULL | Animal relacionado.                       |
-| url       | VARCHAR   | NOT NULL     | Caminho ou URL da imagem armazenada.      |
-| isPrimary | BOOLEAN   | NOT NULL     | Indica se é a imagem principal do animal. |
-| createdAt | TIMESTAMP | NOT NULL     | Data de criação do registro.              |
-| updatedAt | TIMESTAMP | NOT NULL     | Data da última atualização.               |
+| Campo     | Tipo      | Restrições   | Descrição                                   |
+| --------- | --------- | ------------ | ------------------------------------------- |
+| id        | UUID      | PK           | Identificador único.                        |
+| animalId  | UUID      | FK, NOT NULL | Animal relacionado.                         |
+| fileId    | UUID      | FK, NOT NULL | Arquivo utilizado como imagem.              |
+| isPrimary | BOOLEAN   | NOT NULL     | Indica se a imagem é a principal do animal. |
+| createdAt | TIMESTAMP | NOT NULL     | Data de criação do registro.                |
+| updatedAt | TIMESTAMP | NOT NULL     | Data da última atualização.                 |
 
 ### Relacionamentos
 
 * Pertence a um único **Animal**.
+* Referencia um único **File**.
 
 ### Observações
 
 * Um animal pode possuir no máximo cinco imagens.
 * Todo animal deve possuir exatamente uma imagem definida como principal.
 * A imagem principal será utilizada nas listagens e em outros locais onde apenas uma imagem for exibida.
-* O armazenamento físico das imagens é responsabilidade da camada de infraestrutura.
+* A entidade **AnimalImage** representa uma utilização específica do arquivo no contexto de um animal.
+* O armazenamento físico do arquivo não é responsabilidade desta entidade.
+* A entidade não utiliza Soft Delete nesta versão.
+
+---
+
+## File
+
+Representa um arquivo armazenado pela aplicação e seus metadados.
+
+A entidade é genérica e não está vinculada diretamente a um domínio específico.
+
+### Atributos
+
+| Campo      | Tipo      | Restrições | Descrição                                      |
+| ---------- | --------- | ---------- | ---------------------------------------------- |
+| id         | UUID      | PK         | Identificador único.                           |
+| storageKey | VARCHAR   | NOT NULL   | Identificador do arquivo no storage utilizado. |
+| mimeType   | VARCHAR   | NOT NULL   | Tipo MIME do arquivo.                          |
+| size       | BIGINT    | NOT NULL   | Tamanho do arquivo em bytes.                   |
+| createdAt  | TIMESTAMP | NOT NULL   | Data de criação do registro.                   |
+| updatedAt  | TIMESTAMP | NOT NULL   | Data da última atualização.                    |
+
+### Relacionamentos
+
+* Pode ser referenciado por várias **AnimalImages**.
+
+### Observações
+
+* O arquivo binário não é armazenado diretamente no PostgreSQL.
+* O banco de dados armazena somente os metadados e a referência do arquivo no storage.
+* O campo `storageKey` identifica o arquivo no provedor de armazenamento utilizado.
+* A URL de acesso ao arquivo não é persistida como parte da entidade.
+* A obtenção da URL é responsabilidade da camada de armazenamento através do `StorageProvider`.
+* A entidade não possui `animalId` nem `isPrimary`, pois essas informações pertencem ao contexto que utiliza o arquivo.
 * A entidade não utiliza Soft Delete nesta versão.
 
 ---
@@ -179,33 +219,6 @@ Representa uma solicitação de interesse em adoção realizada por um visitante
 * O campo `status` representa o estado atual da solicitação.
 * Um mesmo animal pode possuir múltiplas solicitações.
 * Uma solicitação somente pode ser criada para um animal com status `AVAILABLE`.
-
-### Status
-
-#### PENDING
-
-A solicitação foi recebida, mas o administrador ainda não iniciou o processo de avaliação do interessado.
-
-#### IN_ANALYSIS
-
-O administrador entrou em contato com o interessado e iniciou o processo de avaliação da solicitação.
-
-#### APPROVED
-
-O interessado foi aprovado e a adoção foi efetivada.
-
-Quando uma solicitação passa para `APPROVED`:
-
-* o animal relacionado passa para `ADOPTED`;
-* as demais solicitações `PENDING` ou `IN_ANALYSIS` relacionadas ao mesmo animal passam para `CANCELED`.
-
-#### REJECTED
-
-A solicitação foi analisada e o interessado não foi aprovado para a adoção.
-
-#### CANCELED
-
-A solicitação foi cancelada porque outra solicitação referente ao mesmo animal foi aprovada.
 
 ---
 
@@ -269,6 +282,8 @@ Exemplos:
 * Um animal pode possuir várias imagens.
 * Um animal pode possuir no máximo cinco imagens.
 * Todo animal deve possuir exatamente uma imagem principal.
+* Toda associação `AnimalImage` deve estar vinculada a um único animal.
+* Toda associação `AnimalImage` deve referenciar um único arquivo.
 * Um animal pode possuir várias solicitações de adoção.
 * Toda solicitação pertence obrigatoriamente a um único animal.
 * Solicitações de adoção não podem ser excluídas.
@@ -294,3 +309,7 @@ Exemplos:
 * A idade dos animais é armazenada em meses por meio do campo `ageInMonths`.
 * A localização utiliza um ENUM para a Unidade Federativa e texto para a cidade.
 * A entidade `AnimalImage` é utilizada para permitir múltiplas imagens por animal.
+* A entidade `File` representa arquivos de forma genérica e não possui conhecimento sobre os domínios que os utilizam.
+* Os arquivos binários não são armazenados diretamente no banco de dados.
+* O banco armazena a referência (`storageKey`) e os metadados necessários para o gerenciamento dos arquivos.
+* A URL de acesso aos arquivos é obtida por meio da camada de armazenamento.

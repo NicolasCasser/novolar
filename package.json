@@ -14,7 +14,10 @@
     "test:integration": "docker compose -f docker-compose.test.yml run --rm backend-test sh -c 'npm run migration:test:run && npm run seed:test:admin && npm run test:integration'",
     "test:cov": "npm run test:cov --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "migration:generate": "docker exec novolar-backend npm run migration:generate --",
+    "migration:run": "docker exec novolar-backend npm run migration:run",
+    "migration:revert": "docker exec novolar-backend npm run migration:revert"
   },
   "engines": {
     "node": ">=22.0.0",

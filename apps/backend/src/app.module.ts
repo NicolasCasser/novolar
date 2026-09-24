@@ -9,6 +9,10 @@ import { AnimalsModule } from './modules/animals/animals.module';
 import { AdoptionRequestsModule } from './modules/adoption-requests/adoption-requests.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { Request, Response } from 'express';
+import { FilesModule } from './modules/files/files.module';
+import { LocationsModule } from './modules/locations/locations.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -27,11 +31,18 @@ import { Request, Response } from 'express';
       }),
     }),
 
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+    }),
+
     DataBaseModule,
     UsersModule,
     AnimalsModule,
     AdoptionRequestsModule,
     AuthModule,
+    FilesModule,
+    LocationsModule,
   ],
   providers: [],
 })

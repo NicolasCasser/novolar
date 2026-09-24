@@ -1,0 +1,294 @@
+.footer {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-top: 49px;
+}
+
+/* Conteúdo principal */
+
+.footer-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 64px;
+
+  margin: 0 80px 33px;
+}
+
+/* Marca */
+
+.footer-brand {
+  min-width: 0;
+}
+
+.footer-brand img {
+  width: 150px;
+  height: auto;
+
+  display: block;
+
+  margin-bottom: 15px;
+}
+
+.footer-brand p {
+  max-width: 349px;
+
+  font-size: 14px;
+  line-height: 23px;
+  font-weight: 400;
+  color: #7D7D7D;
+
+  margin: 0;
+}
+
+/* Links */
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+.footer-links span {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: #1F1F1F;
+
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #53AEA7;
+}
+
+.footer-external-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.external-link-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Projeto */
+
+.footer-project {
+  min-width: 0;
+  max-width: 385px;
+
+  margin: 0;
+}
+
+.footer-project span {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.footer-project p {
+  max-width: 385px;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+
+/* Botão GitHub */
+
+.footer-github-button {
+  width: 194px;
+  height: 36px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  color: #3D8980;
+
+  background: #E5F3F1;
+
+  border: 1px solid #BBDDD9;
+  border-radius: 6px;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.footer-github-button .icon {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+}
+
+.footer-github-button:hover {
+  color: #FFFFFF;
+
+  background: #53AEA7;
+  border-color: #53AEA7;
+
+  box-shadow:
+    0px 3px 8px rgba(83, 174, 167, 0.2);
+}
+
+.footer-github-button:active {
+  background: #3D8980;
+  border-color: #3D8980;
+}
+
+.footer-github-button:disabled {
+  opacity: 0.4;
+}
+
+/* Rodapé inferior */
+
+.footer-bottom {
+  margin: 0 24px;
+
+  border-top: 1px solid #D6D6D6;
+}
+
+.footer-bottom span {
+  display: block;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #7D7D7D;
+
+  margin: 32px 0;
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .footer-main {
+    margin-left: 40px;
+    margin-right: 40px;
+
+    gap: 40px;
+  }
+
+  .footer-brand p {
+    max-width: 300px;
+  }
+
+  .footer-project {
+    max-width: 300px;
+  }
+
+  .footer-project p {
+    max-width: 300px;
+  }
+}
+
+/* Tablet pequeno */
+
+@media (max-width: 768px) {
+  .footer-main {
+    margin-left: 24px;
+    margin-right: 24px;
+
+    gap: 40px;
+  }
+
+  .footer-brand p {
+    max-width: 260px;
+  }
+
+  .footer-project {
+    max-width: 280px;
+  }
+
+  .footer-project p {
+    max-width: 280px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .footer {
+    margin-top: 40px;
+  }
+
+  .footer-main {
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin-left: 24px;
+    margin-right: 24px;
+
+    gap: 32px;
+  }
+
+  .footer-brand {
+    width: 100%;
+  }
+
+  .footer-brand p {
+    width: 100%;
+    max-width: 349px;
+  }
+
+  .footer-links {
+    width: 100%;
+  }
+
+  .footer-project {
+    width: 100%;
+    max-width: 385px;
+
+    margin-bottom: 0;
+  }
+
+  .footer-project p {
+    width: 100%;
+    max-width: 385px;
+  }
+
+  .footer-bottom {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .footer-bottom span {
+    margin: 24px 0;
+
+    text-align: center;
+  }
+}

@@ -122,7 +122,9 @@ Os dados de estados e municípios não serão armazenados pela aplicação como 
 
 Todo animal deverá possuir pelo menos uma imagem e poderá possuir no máximo cinco imagens cadastradas.
 
-As imagens serão armazenadas por meio da entidade `AnimalImage`, não diretamente na entidade `Animal`.
+As imagens dos animais serão representadas pela entidade `AnimalImage`, que associa o animal a arquivos armazenados pela aplicação por meio da entidade `File`.
+
+O conteúdo binário das imagens não será armazenado diretamente no banco de dados.
 
 ---
 
@@ -130,15 +132,19 @@ As imagens serão armazenadas por meio da entidade `AnimalImage`, não diretamen
 
 Todo animal deverá possuir exatamente uma imagem definida como principal.
 
+A informação `isPrimary` pertence à associação `AnimalImage`, pois representa uma característica da utilização daquele arquivo no contexto específico do animal.
+
 A imagem principal será utilizada nos contextos em que apenas uma imagem do animal for exibida, como o catálogo público.
 
 ---
 
-### RN11 — Integridade das imagens
+### RN11 — Integridade das associações de imagens
 
-Toda imagem deverá estar obrigatoriamente vinculada a um único animal.
+Toda associação `AnimalImage` deverá estar obrigatoriamente vinculada a um único animal e deverá referenciar um único arquivo existente na entidade `File`.
 
-Uma imagem não poderá existir sem um animal associado.
+A entidade `File` não possui conhecimento sobre o animal que utiliza o arquivo, pois representa um recurso genérico de armazenamento.
+
+A associação entre o arquivo e o animal será responsabilidade da entidade `AnimalImage`.
 
 ---
 
@@ -496,9 +502,12 @@ Um animal não poderá possuir mais de cinco imagens cadastradas.
 ### RN50 — Integridade das relações
 
 As seguintes relações deverão ser obrigatoriamente respeitadas:
-
 * Todo animal pertence a um administrador;
-* Toda imagem pertence a um animal;
+* Toda associação `AnimalImage` deve pertencer a um único animal.
+* Toda associação `AnimalImage` deve referenciar um único `File` existente.
+* A entidade `File` deve permanecer independente do domínio que utiliza o arquivo.
+* Um arquivo não deve armazenar informações específicas sobre o animal que o utiliza.
+* A definição de uma imagem como principal pertence à associação `AnimalImage`.
 * Toda solicitação pertence a um animal.
 
 ---
