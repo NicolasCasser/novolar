@@ -32,3 +32,5 @@ coverage/
 *.pid
 
 design-system.md
+
+uploads/

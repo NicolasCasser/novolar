@@ -3,7 +3,7 @@ import { Response } from 'express';
 
 import { AuthService } from './auth.service';
 import { AuthDTO } from './dto/auth.dto';
-import { AuthInputDTO } from './dto/auth.input.dto';
+import { AuthInputDTO } from './dto/auth.input';
 import { UserDTO } from '../users/dto/user.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';

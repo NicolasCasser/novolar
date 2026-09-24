@@ -1,6 +1,8 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+
 import { Animal } from './animal.entity';
+import { File } from 'src/modules/files/entities/file.entity';
 
 @Entity('animal_images')
 export class AnimalImage extends BaseEntity {
@@ -11,8 +13,12 @@ export class AnimalImage extends BaseEntity {
   @Column({ name: 'animal_id', type: 'uuid' })
   animalId: string;
 
-  @Column({ type: 'varchar' })
-  url: string;
+  @ManyToOne(() => File, { nullable: false })
+  @JoinColumn({ name: 'file_id' })
+  file: File;
+
+  @Column({ name: 'file_id', type: 'uuid' })
+  fileId: string;
 
   @Column({ name: 'is_primary', type: 'boolean' })
   isPrimary: boolean;

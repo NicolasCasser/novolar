@@ -1,0 +1,177 @@
+.animal-card {
+  width: 296px;
+  height: 467px;
+
+  background: #F7F7F7;
+
+  border-radius: 8px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  overflow: hidden;
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.animal-card:hover {
+  box-shadow:
+    0px 4px 8px #0000001A,
+    0px 8px 16px #00000012;
+
+  transform: translateY(-2px);
+}
+
+/* Imagem */
+
+.animal-card-image {
+  position: relative;
+}
+
+.animal-card-image img {
+  width: 100%;
+  height: 296px;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 8px 8px 0 0;
+}
+
+/* Tag de espécie */
+
+.animal-card-species {
+  position: absolute;
+
+  top: 15px;
+  left: 12px;
+
+  height: 20px;
+  padding: 0 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  border: 1px solid #BBDDD9;
+
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #3D8980;
+
+  background: #E5F3F1E6;
+}
+
+/* Conteúdo */
+
+.animal-card-content {
+  margin: 15px;
+}
+
+.animal-card-content h3 {
+  margin-top: 15px;
+  margin-bottom: 8px;
+
+  font-size: 18px;
+  line-height: 23px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.animal-card-breed {
+  margin-top: 0;
+  margin-bottom: 16px;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+.animal-card-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.animal-card-info span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  min-width: 0;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+.animal-card-info svg {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+
+  color: #53AEA7;
+}
+
+.animal-card-content a {
+  width: 100%;
+  height: 40px;
+
+  margin-top: 16px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  color: #FFFFFF;
+
+  background: #53AEA7;
+
+  border: none;
+  border-radius: 6px;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.animal-card-content a:hover {
+  background: #4A9D96;
+
+  box-shadow:
+    0px 3px 6px rgba(83, 174, 167, 0.25);
+}
+
+.animal-card-content a:active {
+  background: #3D8980;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .animal-card {
+    width: 100%;
+    max-width: 296px;
+  }
+}

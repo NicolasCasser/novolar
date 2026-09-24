@@ -4,7 +4,7 @@ import { Response } from 'express';
 
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
-import { AuthInputDTO } from './dto/auth.input.dto';
+import { AuthInputDTO } from './dto/auth.input';
 import { AuthDTO } from './dto/auth.dto';
 import { User } from '../users/entities/user.entity';
 
