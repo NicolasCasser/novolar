@@ -35,6 +35,36 @@
   object-position: center;
 }
 
+/* Tag de espécie */
+
+.interest-animal-card-species {
+  position: absolute;
+
+  top: 12px;
+  left: 12px;
+
+  height: 20px;
+  padding: 0 6px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  border: 1px solid #BBDDD9;
+
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #3D8980;
+
+  background: #E5F3F1E6;
+}
+
 /* Conteúdo */
 
 .interest-animal-card-content {

@@ -1,16 +1,13 @@
 import './AnimalCard.css';
 import { Clock3, MapPin } from 'lucide-react';
 
-import { SpeciesBadge } from '../../../ui/SpeciesBadge/SpeciesBadge';
-import type { AnimalSpecies } from '../../../../utils/animals';
-
 interface AnimalCardProps {
   name: string;
   breed: string;
   age: string;
   city: string;
   state: string;
-  species: AnimalSpecies;
+  species: string;
   imageUrl: string;
   href?: string;
 }
@@ -30,7 +27,7 @@ export function AnimalCard({
       <div className="animal-card-image">
         <img src={imageUrl} alt={name} />
 
-        <SpeciesBadge species={species} />
+        <span className="animal-card-species">{species}</span>
       </div>
 
       <div className="animal-card-content">

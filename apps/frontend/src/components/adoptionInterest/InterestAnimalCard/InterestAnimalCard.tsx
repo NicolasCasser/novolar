@@ -1,6 +1,6 @@
 import { Info, MapPin } from 'lucide-react';
 
-import { SpeciesBadge } from '../../ui/SpeciesBadge/SpeciesBadge';
+import { speciesLabels } from '../../../utils/animals';
 import type { AnimalSpecies } from '../../../utils/animals';
 
 import './InterestAnimalCard.css';
@@ -27,7 +27,9 @@ export function InterestAnimalCard({
       <div className="interest-animal-card-image">
         <img src={imageUrl} alt={name} />
 
-        <SpeciesBadge species={species} />
+        <span className="interest-animal-card-species">
+          {speciesLabels[species]}
+        </span>
       </div>
 
       <div className="interest-animal-card-content">

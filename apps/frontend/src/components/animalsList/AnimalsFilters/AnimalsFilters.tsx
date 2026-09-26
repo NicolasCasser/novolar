@@ -56,18 +56,18 @@ export function AnimalsFilters({
 }: AnimalsFiltersProps) {
   return (
     <form
-      className="animals-filters"
+      className="animals-list-filters"
       onSubmit={(event) => {
         event.preventDefault();
 
         onSubmit();
       }}
     >
-      <div className="animals-filters-row animals-filters-row--main">
-        <div className="animals-filter animals-filter--search">
+      <div className="animals-list-filters-row animals-list-filters-row--main">
+        <div className="animals-list-filter animals-list-filter--search">
           <label htmlFor="animalsSearch">BUSCAR POR NOME OU CÓDIGO</label>
 
-          <div className="animals-filter-search">
+          <div className="animals-list-filter-search">
             <Search />
 
             <input
@@ -80,7 +80,7 @@ export function AnimalsFilters({
           </div>
         </div>
 
-        <div className="animals-filter">
+        <div className="animals-list-filter">
           <label htmlFor="animalsSpecies">ESPÉCIE</label>
 
           <select
@@ -103,7 +103,7 @@ export function AnimalsFilters({
           </select>
         </div>
 
-        <div className="animals-filter">
+        <div className="animals-list-filter">
           <label htmlFor="animalsSize">PORTE</label>
 
           <select
@@ -123,7 +123,7 @@ export function AnimalsFilters({
           </select>
         </div>
 
-        <div className="animals-filter">
+        <div className="animals-list-filter">
           <label htmlFor="animalsSex">SEXO</label>
 
           <select
@@ -144,8 +144,8 @@ export function AnimalsFilters({
         </div>
       </div>
 
-      <div className="animals-filters-row animals-filters-row--secondary">
-        <div className="animals-filter">
+      <div className="animals-list-filters-row animals-list-filters-row--secondary">
+        <div className="animals-list-filter">
           <label htmlFor="animalsStatus">STATUS</label>
 
           <select
@@ -165,7 +165,7 @@ export function AnimalsFilters({
           </select>
         </div>
 
-        <div className="animals-filter">
+        <div className="animals-list-filter">
           <label htmlFor="animalsState">ESTADO</label>
 
           <select
@@ -185,7 +185,7 @@ export function AnimalsFilters({
           </select>
         </div>
 
-        <div className="animals-filter">
+        <div className="animals-list-filter">
           <label htmlFor="animalsCity">CIDADE</label>
 
           <select
@@ -212,7 +212,7 @@ export function AnimalsFilters({
 
         <button
           type="button"
-          className="animals-filters-clear"
+          className="animals-list-filters-clear"
           onClick={onClear}
         >
           <Filter />

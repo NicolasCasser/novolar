@@ -6,30 +6,16 @@ import { Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import './AnimalsSection.css';
 import { AnimalCard } from './AnimalCard/AnimalCard';
-import {
-  formatAge,
-  sexLabels,
-  sizeLabels,
-  speciesLabels,
-} from '../../../utils/animals';
-import type {
-  AnimalSex,
-  AnimalSize,
-  AnimalSpecies,
-  AnimalStatus,
-} from '../../../utils/animals';
-import { states } from '../../../utils/locations';
-import type { BrazilianState } from '../../../utils/locations';
 
 type Animal = {
   id: string;
   name: string;
   breed: string;
-  species: AnimalSpecies;
+  species: 'DOG' | 'CAT' | 'BIRD' | 'RABBIT' | 'OTHER';
   ageInMonths: number;
   city: string;
   state: string;
-  status: AnimalStatus;
+  status: 'AVAILABLE' | 'ADOPTED';
   images: {
     id: string;
     url: string;
@@ -37,7 +23,40 @@ type Animal = {
   }[];
 };
 
+type AnimalSize = 'SMALL' | 'MEDIUM' | 'LARGE';
+
+type AnimalSex = 'MALE' | 'FEMALE';
+
 type AgeFilter = '' | 'PUPPY' | 'YOUNG' | 'ADULT' | 'SENIOR';
+
+type BrazilianState =
+  | 'AC'
+  | 'AL'
+  | 'AP'
+  | 'AM'
+  | 'BA'
+  | 'CE'
+  | 'DF'
+  | 'ES'
+  | 'GO'
+  | 'MA'
+  | 'MT'
+  | 'MS'
+  | 'MG'
+  | 'PA'
+  | 'PB'
+  | 'PR'
+  | 'PE'
+  | 'PI'
+  | 'RJ'
+  | 'RN'
+  | 'RS'
+  | 'RO'
+  | 'RR'
+  | 'SC'
+  | 'SP'
+  | 'SE'
+  | 'TO';
 
 type AnimalsData = {
   animals: {
@@ -106,6 +125,25 @@ const CITIES: TypedDocumentNode<CitiesData, CitiesVariables> = gql`
 
 const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
 
+const speciesLabels = {
+  DOG: 'Cachorro',
+  CAT: 'Gato',
+  BIRD: 'Ave',
+  RABBIT: 'Coelho',
+  OTHER: 'Outro',
+};
+
+const sizeLabels = {
+  SMALL: 'Pequeno',
+  MEDIUM: 'Médio',
+  LARGE: 'Grande',
+};
+
+const sexLabels = {
+  MALE: 'Macho',
+  FEMALE: 'Fêmea',
+};
+
 const ageFilters: Record<
   Exclude<AgeFilter, ''>,
   {
@@ -128,6 +166,53 @@ const ageFilters: Record<
     minAgeInMonths: 84,
   },
 };
+
+const states: { value: BrazilianState; label: string }[] = [
+  { value: 'AC', label: 'Acre' },
+  { value: 'AL', label: 'Alagoas' },
+  { value: 'AP', label: 'Amapá' },
+  { value: 'AM', label: 'Amazonas' },
+  { value: 'BA', label: 'Bahia' },
+  { value: 'CE', label: 'Ceará' },
+  { value: 'DF', label: 'Distrito Federal' },
+  { value: 'ES', label: 'Espírito Santo' },
+  { value: 'GO', label: 'Goiás' },
+  { value: 'MA', label: 'Maranhão' },
+  { value: 'MT', label: 'Mato Grosso' },
+  { value: 'MS', label: 'Mato Grosso do Sul' },
+  { value: 'MG', label: 'Minas Gerais' },
+  { value: 'PA', label: 'Pará' },
+  { value: 'PB', label: 'Paraíba' },
+  { value: 'PR', label: 'Paraná' },
+  { value: 'PE', label: 'Pernambuco' },
+  { value: 'PI', label: 'Piauí' },
+  { value: 'RJ', label: 'Rio de Janeiro' },
+  { value: 'RN', label: 'Rio Grande do Norte' },
+  { value: 'RS', label: 'Rio Grande do Sul' },
+  { value: 'RO', label: 'Rondônia' },
+  { value: 'RR', label: 'Roraima' },
+  { value: 'SC', label: 'Santa Catarina' },
+  { value: 'SP', label: 'São Paulo' },
+  { value: 'SE', label: 'Sergipe' },
+  { value: 'TO', label: 'Tocantins' },
+];
+
+function formatAge(ageInMonths: number): string {
+  if (ageInMonths < 12) {
+    return `${ageInMonths} ${ageInMonths === 1 ? 'mês' : 'meses'}`;
+  }
+
+  const years = Math.floor(ageInMonths / 12);
+  const months = ageInMonths % 12;
+
+  if (months === 0) {
+    return `${years} ${years === 1 ? 'ano' : 'anos'}`;
+  }
+
+  return `${years} ${years === 1 ? 'ano' : 'anos'} e ${months} ${
+    months === 1 ? 'mês' : 'meses'
+  }`;
+}
 
 function AnimalsSection() {
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -424,7 +509,7 @@ function AnimalsSection() {
                 age={formatAge(animal.ageInMonths)}
                 city={animal.city}
                 state={animal.state}
-                species={animal.species}
+                species={speciesLabels[animal.species]}
                 imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
                 href={`/animals/${animal.id}`}
               />

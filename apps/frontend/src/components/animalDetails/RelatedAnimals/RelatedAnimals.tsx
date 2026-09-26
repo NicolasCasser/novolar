@@ -2,7 +2,7 @@ import { ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { AnimalCard } from '../../home/AnimalsSection/AnimalCard/AnimalCard';
-import { formatAge } from '../../../utils/animals';
+import { formatAge, speciesLabels } from '../../../utils/animals';
 import type { AnimalSpecies } from '../../../utils/animals';
 
 import './RelatedAnimals.css';
@@ -56,7 +56,7 @@ export function RelatedAnimals({ animals }: RelatedAnimalsProps) {
               age={formatAge(animal.ageInMonths)}
               city={animal.city}
               state={animal.state}
-              species={animal.species}
+              species={speciesLabels[animal.species]}
               imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
               href={`/animals/${animal.id}`}
             />
