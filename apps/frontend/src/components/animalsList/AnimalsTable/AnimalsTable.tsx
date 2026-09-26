@@ -3,12 +3,17 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Eye,
   MapPin,
   MoreHorizontal,
+  Pencil,
+  Trash2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { AnimalStatusBadge } from '../../ui/AnimalStatusBadge/AnimalStatusBadge';
+import { ActionsMenu } from '../../ui/ActionsMenu/ActionsMenu';
+import type { ActionMenuItem } from '../../ui/ActionsMenu/ActionsMenu';
 import { SpeciesBadge } from '../../ui/SpeciesBadge/SpeciesBadge';
 import type { AnimalSpecies, AnimalStatus } from '../../../utils/animals';
 import { formatDate } from '../../../utils/date';
@@ -36,6 +41,9 @@ interface AnimalsTableProps {
   loading: boolean;
   error: string;
   onPageChange: (page: number) => void;
+  onView: (animal: AnimalListItem) => void;
+  onEdit: (animal: AnimalListItem) => void;
+  onDelete: (animal: AnimalListItem) => void;
 }
 
 function buildPageItems(
@@ -77,6 +85,9 @@ export function AnimalsTable({
   loading,
   error,
   onPageChange,
+  onView,
+  onEdit,
+  onDelete,
 }: AnimalsTableProps) {
   const firstItem = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const lastItem = Math.min(page * pageSize, total);
@@ -113,63 +124,82 @@ export function AnimalsTable({
               )}
 
               {!loading &&
-                items.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <div className="animals-table-photo">
-                        <img src={item.imageUrl} alt={item.name} />
-                      </div>
-                    </td>
+                items.map((item) => {
+                  const actionItems: ActionMenuItem[] = [
+                    {
+                      label: 'Ver detalhes',
+                      icon: Eye,
+                      onSelect: () => onView(item),
+                    },
+                    {
+                      label: 'Editar',
+                      icon: Pencil,
+                      onSelect: () => onEdit(item),
+                    },
+                    {
+                      label: 'Remover',
+                      icon: Trash2,
+                      tone: 'danger',
+                      onSelect: () => onDelete(item),
+                    },
+                  ];
 
-                    <td>
-                      <Link
-                        className="animals-table-name"
-                        to={`/animals/${item.id}`}
-                      >
-                        {item.name}
-                      </Link>
-                    </td>
+                  return (
+                    <tr key={item.id}>
+                      <td>
+                        <div className="animals-table-photo">
+                          <img src={item.imageUrl} alt={item.name} />
+                        </div>
+                      </td>
 
-                    <td>
-                      <SpeciesBadge species={item.species} />
-                    </td>
+                      <td>
+                        <Link
+                          className="animals-table-name"
+                          to={`/animals/${item.id}`}
+                        >
+                          {item.name}
+                        </Link>
+                      </td>
 
-                    <td>
-                      <span className="animals-table-muted">
-                        <MapPin />
-                        {item.city}, {item.state}
-                      </span>
-                    </td>
+                      <td>
+                        <SpeciesBadge species={item.species} />
+                      </td>
 
-                    <td>
-                      <span className="animals-table-muted">
-                        <Calendar />
-                        {item.age}
-                      </span>
-                    </td>
+                      <td>
+                        <span className="animals-table-muted">
+                          <MapPin />
+                          {item.city}, {item.state}
+                        </span>
+                      </td>
 
-                    <td>
-                      <AnimalStatusBadge status={item.status} />
-                    </td>
+                      <td>
+                        <span className="animals-table-muted">
+                          <Calendar />
+                          {item.age}
+                        </span>
+                      </td>
 
-                    <td>
-                      <span className="animals-table-muted">
-                        <Clock />
-                        {formatDate(item.createdAt)}
-                      </span>
-                    </td>
+                      <td>
+                        <AnimalStatusBadge status={item.status} />
+                      </td>
 
-                    <td>
-                      <button
-                        type="button"
-                        className="animals-table-action"
-                        aria-label={`Mais ações para ${item.name}`}
-                      >
-                        <MoreHorizontal />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      <td>
+                        <span className="animals-table-muted">
+                          <Clock />
+                          {formatDate(item.createdAt)}
+                        </span>
+                      </td>
+
+                      <td>
+                        <ActionsMenu
+                          label={`Mais ações para ${item.name}`}
+                          icon={MoreHorizontal}
+                          items={actionItems}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
 
               {!loading && items.length === 0 && (
                 <tr>

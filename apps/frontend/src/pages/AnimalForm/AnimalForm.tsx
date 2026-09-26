@@ -3,7 +3,7 @@ import type { TypedDocumentNode } from '@apollo/client';
 import { useMutation, useQuery, useApolloClient } from '@apollo/client/react';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import './AnimalForm.css';
 
@@ -46,6 +46,33 @@ type CreateAnimalInput = {
   images: { fileId: string }[];
 };
 
+// A API de update e parcial: os campos omitidos permanecem intactos, por isso
+// "color" e "images" nao sao enviados na edicao. O backend so substitui as
+// fotos quando "images" vem na mutation.
+
+type UpdateAnimalInput = Omit<CreateAnimalInput, 'color' | 'images'>;
+
+type AnimalData = {
+  animal: {
+    id: string;
+    name: string;
+    description: string;
+    species: AnimalSpecies;
+    breed: string;
+    sex: AnimalSex;
+    size: AnimalSize;
+    state: BrazilianState;
+    city: string;
+    ageInMonths: number;
+    vaccinated: boolean;
+    neutered: boolean;
+  };
+};
+
+type AnimalVariables = {
+  id: string;
+};
+
 const CITIES: TypedDocumentNode<CitiesData, CitiesVariables> = gql`
   query AnimalFormCities($state: BrazilianState!) {
     cities(state: $state)
@@ -59,6 +86,36 @@ const CREATE_ANIMAL: TypedDocumentNode<
   mutation AnimalFormCreateAnimal($input: CreateAnimalInputDTO!) {
     createAnimal(input: $input) {
       id
+    }
+  }
+`;
+
+const UPDATE_ANIMAL: TypedDocumentNode<
+  { updateAnimal: { id: string } },
+  { id: string; input: UpdateAnimalInput }
+> = gql`
+  mutation AnimalFormUpdateAnimal($id: String!, $input: UpdateAnimalInputDTO!) {
+    updateAnimal(id: $id, input: $input) {
+      id
+    }
+  }
+`;
+
+const ANIMAL: TypedDocumentNode<AnimalData, AnimalVariables> = gql`
+  query AnimalFormAnimal($id: String!) {
+    animal(id: $id) {
+      id
+      name
+      description
+      species
+      breed
+      sex
+      size
+      state
+      city
+      ageInMonths
+      vaccinated
+      neutered
     }
   }
 `;
@@ -109,20 +166,72 @@ const initialValues = {
   description: '',
 };
 
+// A idade e guardada em meses. Anos exatos voltam para o campo de anos, o
+// resto abre o campo em meses para nao perder a precisao.
+
+function toFormValues(animal: AnimalData['animal']) {
+  const wholeYears = animal.ageInMonths % 12 === 0;
+
+  return {
+    ...initialValues,
+    name: animal.name,
+    species: animal.species,
+    breed: animal.breed,
+    sex: animal.sex,
+    size: animal.size,
+    age: String(wholeYears ? animal.ageInMonths / 12 : animal.ageInMonths),
+    ageInMonths: !wholeYears,
+    vaccinated: animal.vaccinated,
+    neutered: animal.neutered,
+    state: animal.state,
+    city: animal.city,
+    description: animal.description,
+  };
+}
+
 function AnimalForm() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const client = useApolloClient();
+
+  // A mesma tela atende a criacao e a edicao: com "id" ela preenche o formulario
+  // e chama updateAnimal, sem "id" cria um novo animal.
+
+  const isEditing = Boolean(id);
 
   const [values, setValues] = useState(initialValues);
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState('');
+  const [prefilledId, setPrefilledId] = useState<string | null>(null);
+
+  const {
+    data: animalData,
+    loading: loadingAnimal,
+    error: animalError,
+  } = useQuery(ANIMAL, {
+    variables: { id: id ?? '' },
+    skip: !isEditing,
+  });
+
+  const animal = animalData?.animal;
+
+  // Ajuste de estado durante a renderizacao: e o padrao do React para
+  // preencher o formulario assim que o animal chega da API.
+
+  if (animal && animal.id !== prefilledId) {
+    setPrefilledId(animal.id);
+    setValues(toFormValues(animal));
+  }
 
   const { data: citiesData } = useQuery(CITIES, {
     variables: { state: values.state as BrazilianState },
     skip: !values.state,
   });
 
-  const [createAnimal, { loading: saving }] = useMutation(CREATE_ANIMAL);
+  const [createAnimal, { loading: creating }] = useMutation(CREATE_ANIMAL);
+  const [updateAnimal, { loading: updating }] = useMutation(UPDATE_ANIMAL);
+
+  const saving = isEditing ? updating : creating;
 
   function handleChange(field: keyof typeof initialValues, value: string) {
     setValues((current) => {
@@ -149,7 +258,7 @@ function AnimalForm() {
 
     setError('');
 
-    if (files.length === 0) {
+    if (!isEditing && files.length === 0) {
       setError('Adicione ao menos uma foto do animal.');
 
       return;
@@ -163,33 +272,43 @@ function AnimalForm() {
       return;
     }
 
-    try {
-      const fileIds = await Promise.all(files.map(uploadImage));
+    const animalInput = {
+      name: values.name.trim(),
+      description: values.description.trim(),
+      species: values.species as AnimalSpecies,
+      breed: values.breed.trim(),
+      sex: values.sex as AnimalSex,
+      size: values.size as AnimalSize,
+      state: values.state as BrazilianState,
+      city: values.city.trim(),
+      ageInMonths: values.ageInMonths ? age : age * 12,
+      vaccinated: values.vaccinated,
+      neutered: values.neutered,
+    };
 
-      await createAnimal({
-        variables: {
-          input: {
-            name: values.name.trim(),
-            description: values.description.trim(),
-            species: values.species as AnimalSpecies,
-            breed: values.breed.trim(),
-            sex: values.sex as AnimalSex,
-            size: values.size as AnimalSize,
-            // A referencia visual nao possui o campo "cor", que porem e
-            // obrigatorio na API e nunca e exibido no frontend.
-            color: 'Não informado',
-            state: values.state as BrazilianState,
-            city: values.city.trim(),
-            ageInMonths: values.ageInMonths ? age : age * 12,
-            vaccinated: values.vaccinated,
-            neutered: values.neutered,
-            images: fileIds.map((fileId) => ({ fileId })),
+    try {
+      if (isEditing) {
+        await updateAnimal({
+          variables: { id: id ?? '', input: animalInput },
+        });
+      } else {
+        const fileIds = await Promise.all(files.map(uploadImage));
+
+        await createAnimal({
+          variables: {
+            input: {
+              ...animalInput,
+              // A referencia visual nao possui o campo "cor", que porem e
+              // obrigatorio na API e nunca e exibido no frontend.
+              color: 'Não informado',
+              images: fileIds.map((fileId) => ({ fileId })),
+            },
           },
-        },
-      });
+        });
+      }
 
       // A listagem so e montada depois do navigate, entao invalidamos o cache
-      // para o animal recem-criado ja aparecer na tabela e nos contadores.
+      // para o animal ja aparecer na tabela e nos contadores.
 
       client.cache.evict({ id: 'ROOT_QUERY', fieldName: 'animals' });
 
@@ -208,8 +327,26 @@ function AnimalForm() {
     }
   }
 
+  if (isEditing && loadingAnimal) {
+    return (
+      <AdminLayout title="Editar Animal">
+        <p className="animal-form-status">Carregando animal...</p>
+      </AdminLayout>
+    );
+  }
+
+  if (isEditing && (animalError || !animal)) {
+    return (
+      <AdminLayout title="Editar Animal">
+        <p className="animal-form-status">
+          Não foi possível carregar este animal.
+        </p>
+      </AdminLayout>
+    );
+  }
+
   return (
-    <AdminLayout title="Novo Animal">
+    <AdminLayout title={isEditing ? 'Editar Animal' : 'Novo Animal'}>
       <div className="animal-form">
         <Link className="animal-form-back" to="/dashboard/animais">
           <ArrowLeft />
@@ -217,23 +354,32 @@ function AnimalForm() {
         </Link>
 
         <div className="animal-form-header">
-          <h1>Novo animal</h1>
+          <h1>{isEditing ? 'Editar animal' : 'Novo animal'}</h1>
 
-          <p>Preencha as informações do animal.</p>
+          <p>
+            {isEditing
+              ? 'Atualize as informações do animal.'
+              : 'Preencha as informações do animal.'}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="animal-form-sections">
-            <FormSection
-              title="Imagens"
-              description="Faça o upload de até 5 fotos do animal. Formatos suportados: JPG, PNG, WEBP."
-            >
-              <ImageUploader
-                files={files}
-                disabled={saving}
-                onChange={setFiles}
-              />
-            </FormSection>
+            {/* Na edicao as fotos ficam intactas: a API so permite
+                substitui-las por completo e o DTO de imagem nao expoe o
+                fileId das fotos atuais. */}
+            {!isEditing && (
+              <FormSection
+                title="Imagens"
+                description="Faça o upload de até 5 fotos do animal. Formatos suportados: JPG, PNG, WEBP."
+              >
+                <ImageUploader
+                  files={files}
+                  disabled={saving}
+                  onChange={setFiles}
+                />
+              </FormSection>
+            )}
 
             <FormSection title="Informações básicas">
               <div className="animal-form-grid">
@@ -516,7 +662,11 @@ function AnimalForm() {
             >
               <Save />
 
-              {saving ? 'Salvando...' : 'Salvar animal'}
+              {saving
+                ? 'Salvando...'
+                : isEditing
+                  ? 'Salvar alterações'
+                  : 'Salvar animal'}
             </button>
           </div>
         </form>

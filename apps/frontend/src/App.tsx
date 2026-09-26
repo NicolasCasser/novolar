@@ -42,6 +42,14 @@ function App() {
           }
         />
         <Route
+          path="/dashboard/animais/:id/editar"
+          element={
+            <RequireAuth>
+              <AnimalForm />
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/dashboard/solicitacoes"
           element={
             <RequireAuth>

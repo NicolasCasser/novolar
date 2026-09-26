@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import type { TypedDocumentNode } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { ClipboardList, PawPrint, Plus, TrendingUp } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { AnimalsFilters } from '../../components/animalsList/AnimalsFilters/Anim
 import type { AnimalFilters } from '../../components/animalsList/AnimalsFilters/AnimalsFilters';
 import { AnimalsTable } from '../../components/animalsList/AnimalsTable/AnimalsTable';
 import type { AnimalListItem } from '../../components/animalsList/AnimalsTable/AnimalsTable';
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog/ConfirmDialog';
 import { SummaryCards } from '../../components/ui/SummaryCards/SummaryCards';
 import type { SummaryCard } from '../../components/ui/SummaryCards/SummaryCards';
 import { formatAge } from '../../utils/animals';
@@ -71,6 +72,10 @@ type CitiesVariables = {
   state: BrazilianState;
 };
 
+type DeleteAnimalData = {
+  deleteAnimal: string;
+};
+
 const ANIMALS: TypedDocumentNode<AnimalsData, AnimalsVariables> = gql`
   query AnimalsList($filter: AnimalsFilterInputDTO) {
     animals(filter: $filter) {
@@ -98,6 +103,12 @@ const ANIMALS: TypedDocumentNode<AnimalsData, AnimalsVariables> = gql`
 const CITIES: TypedDocumentNode<CitiesData, CitiesVariables> = gql`
   query AnimalsListCities($state: BrazilianState!) {
     cities(state: $state)
+  }
+`;
+
+const DELETE_ANIMAL: TypedDocumentNode<DeleteAnimalData, { id: string }> = gql`
+  mutation AnimalsListDeleteAnimal($id: String!) {
+    deleteAnimal(id: $id)
   }
 `;
 
@@ -129,6 +140,12 @@ function AnimalsList() {
   const [filters, setFilters] = useState(initialFilters);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [animalToRemove, setAnimalToRemove] = useState<AnimalListItem | null>(
+    null,
+  );
+  const [removeError, setRemoveError] = useState('');
+
+  const [deleteAnimal, { loading: removing }] = useMutation(DELETE_ANIMAL);
 
   const { data, loading, error } = useQuery(ANIMALS, {
     variables: {
@@ -256,6 +273,40 @@ function AnimalsList() {
     setPage(nextPage);
   }
 
+  function handleView(animal: AnimalListItem) {
+    navigate(`/animals/${animal.id}`);
+  }
+
+  function handleEdit(animal: AnimalListItem) {
+    navigate(`/dashboard/animais/${animal.id}/editar`);
+  }
+
+  function handleAskRemove(animal: AnimalListItem) {
+    setRemoveError('');
+
+    setAnimalToRemove(animal);
+  }
+
+  function handleCancelRemove() {
+    setAnimalToRemove(null);
+  }
+
+  async function handleConfirmRemove() {
+    if (!animalToRemove) {
+      return;
+    }
+
+    setRemoveError('');
+
+    try {
+      await deleteAnimal({ variables: { id: animalToRemove.id } });
+
+      setAnimalToRemove(null);
+    } catch {
+      setRemoveError('Não foi possível remover o animal. Tente novamente.');
+    }
+  }
+
   return (
     <AdminLayout title="Gerenciamento">
       <div className="animals-list">
@@ -296,10 +347,27 @@ function AnimalsList() {
           loading={loading}
           error={error ? 'Não foi possível carregar os animais.' : ''}
           onPageChange={handlePageChange}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleAskRemove}
         />
 
         <SummaryCards items={summaryCards} />
       </div>
+
+      <ConfirmDialog
+        open={Boolean(animalToRemove)}
+        title="Remover animal"
+        description={
+          animalToRemove
+            ? `${animalToRemove.name} será removido permanentemente do catálogo. Esta ação não pode ser desfeita.${removeError ? ` ${removeError}` : ''}`
+            : ''
+        }
+        confirmLabel="Remover"
+        loading={removing}
+        onConfirm={handleConfirmRemove}
+        onCancel={handleCancelRemove}
+      />
     </AdminLayout>
   );
 }
