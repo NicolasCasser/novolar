@@ -1,11 +1,34 @@
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import {
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Eye,
+  MoreHorizontal,
+  XCircle,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { ActionsMenu } from '../../ui/ActionsMenu/ActionsMenu';
+import type { ActionMenuItem } from '../../ui/ActionsMenu/ActionsMenu';
 import { RequestStatusBadge } from '../../ui/RequestStatusBadge/RequestStatusBadge';
 import { formatDate } from '../../../utils/date';
+import { getAvailableStatusTransitions } from '../../../utils/adoptionRequests';
 import type { AdoptionRequestStatus } from '../../../utils/adoptionRequests';
 
 import './RequestsTable.css';
+
+// Rotulos e icones das transicoes, espelhando o RequestStatusBadge para que a
+// lista e a tela de detalhe falem a mesma linguagem visual.
+
+const statusActions: Record<
+  string,
+  { label: string; icon: typeof Clock; tone?: 'danger' }
+> = {
+  IN_ANALYSIS: { label: 'Iniciar análise', icon: Clock },
+  APPROVED: { label: 'Aprovar', icon: CheckCircle },
+  REJECTED: { label: 'Rejeitar', icon: XCircle, tone: 'danger' },
+};
 
 export type RequestListItem = {
   id: string;
@@ -29,6 +52,11 @@ interface RequestsTableProps {
   loading: boolean;
   error: string;
   onPageChange: (page: number) => void;
+  onView: (request: RequestListItem) => void;
+  onStatusChange: (
+    request: RequestListItem,
+    next: AdoptionRequestStatus,
+  ) => void;
 }
 
 function buildPageItems(
@@ -70,6 +98,8 @@ export function RequestsTable({
   loading,
   error,
   onPageChange,
+  onView,
+  onStatusChange,
 }: RequestsTableProps) {
   const firstItem = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const lastItem = Math.min(page * pageSize, total);
@@ -104,46 +134,66 @@ export function RequestsTable({
               )}
 
               {!loading &&
-                items.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <Link
-                        className="requests-table-animal"
-                        to={`/dashboard/solicitacoes/${item.id}`}
-                      >
-                        {item.animal.name}
-                      </Link>
-                    </td>
+                items.map((item) => {
+                  const actionItems: ActionMenuItem[] = [
+                    {
+                      label: 'Ver detalhes',
+                      icon: Eye,
+                      onSelect: () => onView(item),
+                    },
+                    ...getAvailableStatusTransitions(item.status).map(
+                      (next): ActionMenuItem => {
+                        const action = statusActions[next];
 
-                    <td>{item.applicantName}</td>
+                        return {
+                          label: action.label,
+                          icon: action.icon,
+                          tone: action.tone,
+                          onSelect: () => onStatusChange(item, next),
+                        };
+                      },
+                    ),
+                  ];
 
-                    <td>
-                      <span className="requests-table-muted">
-                        {item.city}, {item.state}
-                      </span>
-                    </td>
+                  return (
+                    <tr key={item.id}>
+                      <td>
+                        <Link
+                          className="requests-table-animal"
+                          to={`/dashboard/solicitacoes/${item.id}`}
+                        >
+                          {item.animal.name}
+                        </Link>
+                      </td>
 
-                    <td>
-                      <span className="requests-table-muted">
-                        {formatDate(item.createdAt)}
-                      </span>
-                    </td>
+                      <td>{item.applicantName}</td>
 
-                    <td>
-                      <RequestStatusBadge status={item.status} withIcon />
-                    </td>
+                      <td>
+                        <span className="requests-table-muted">
+                          {item.city}, {item.state}
+                        </span>
+                      </td>
 
-                    <td>
-                      <button
-                        type="button"
-                        className="requests-table-action"
-                        aria-label={`Mais ações para a solicitação de ${item.animal.name}`}
-                      >
-                        <MoreHorizontal />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      <td>
+                        <span className="requests-table-muted">
+                          {formatDate(item.createdAt)}
+                        </span>
+                      </td>
+
+                      <td>
+                        <RequestStatusBadge status={item.status} withIcon />
+                      </td>
+
+                      <td>
+                        <ActionsMenu
+                          label={`Mais ações para a solicitação de ${item.animal.name}`}
+                          icon={MoreHorizontal}
+                          items={actionItems}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
 
               {!loading && !error && items.length === 0 && (
                 <tr>
