@@ -1,0 +1,29 @@
+.animal-status {
+  height: 24px;
+  padding: 0 10px;
+
+  display: inline-flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.animal-status--available {
+  color: #FFFFFF;
+
+  background: #53AEA7;
+}
+
+.animal-status--adopted {
+  color: #7D7D7D;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+}

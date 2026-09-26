@@ -1,0 +1,144 @@
+.stat-cards {
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+
+  list-style: none;
+}
+
+/* Card */
+
+.stat-card {
+  min-width: 0;
+
+  min-height: 100px;
+  padding: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 12px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.stat-card:hover {
+  box-shadow:
+    0px 4px 8px #0000001A,
+    0px 8px 16px #00000012;
+
+  transform: translateY(-2px);
+}
+
+/* Conteúdo */
+
+.stat-card-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-card-label {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #7D7D7D;
+}
+
+.stat-card-value {
+  margin-top: 6px;
+
+  font-size: 32px;
+  line-height: 38px;
+  font-weight: 700;
+  color: #1F1F1F;
+}
+
+/* Ícone */
+
+.stat-card-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background: #E5F3F1;
+  border: 1px solid #BBDDD9;
+  border-radius: 12px;
+}
+
+.stat-card-icon svg {
+  width: 24px;
+  height: 24px;
+
+  color: #53AEA7;
+}
+
+/* Erro */
+
+.stat-cards-error {
+  margin: 12px 0 0;
+
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7A3429;
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .stat-cards {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .stat-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .stat-cards {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 12px;
+  }
+
+  .stat-card {
+    min-height: auto;
+
+    padding: 20px;
+  }
+
+  .stat-card-value {
+    font-size: 28px;
+    line-height: 34px;
+  }
+}

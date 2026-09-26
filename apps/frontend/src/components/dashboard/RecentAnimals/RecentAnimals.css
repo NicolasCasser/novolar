@@ -1,0 +1,241 @@
+.recent-animals {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  padding: 24px;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 12px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+}
+
+/* Cabeçalho */
+
+.recent-animals-header h2 {
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.recent-animals-header p {
+  margin: 4px 0 0;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Lista */
+
+.recent-animals-list {
+  margin: 20px 0 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  list-style: none;
+}
+
+.recent-animal {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Imagem */
+
+.recent-animal-image {
+  width: 60px;
+  height: 60px;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+.recent-animal-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Conteúdo */
+
+.recent-animal-content {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.recent-animal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.recent-animal-name {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.recent-animal-species {
+  flex-shrink: 0;
+
+  height: 20px;
+  padding: 0 8px;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  border: 1px solid #BBDDD9;
+
+  font-size: 11px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #3D8980;
+
+  background: #E5F3F1E6;
+}
+
+.recent-animal-meta {
+  margin-top: 6px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.recent-animal-meta span {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+.recent-animal-meta svg {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+
+  color: #53AEA7;
+}
+
+/* Erro / vazio */
+
+.recent-animals-error {
+  margin: 20px 0 0;
+
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Rodapé */
+
+.recent-animals-footer {
+  margin-top: 20px;
+  padding-top: 20px;
+
+  border-top: 1px solid #D6D6D6;
+}
+
+.recent-animals-link {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #1F1F1F;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.recent-animals-link svg {
+  width: 16px;
+  height: 16px;
+
+  transition: transform 0.2s ease;
+}
+
+.recent-animals-link:hover {
+  color: #3D8980;
+
+  background: #E5F3F1;
+  border-color: #53AEA7;
+}
+
+.recent-animals-link:hover svg {
+  transform: translateX(2px);
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .recent-animals {
+    padding: 20px;
+  }
+
+  .recent-animals-list {
+    gap: 16px;
+  }
+}

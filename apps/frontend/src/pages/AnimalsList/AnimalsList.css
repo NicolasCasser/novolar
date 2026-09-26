@@ -1,0 +1,122 @@
+.animals-list {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+}
+
+/* Cabeçalho */
+
+.animals-list-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.animals-list h1 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+  color: #1F1F1F;
+}
+
+.animals-list-description {
+  margin: 4px 0 0;
+
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Novo animal */
+
+.animals-list-create {
+  height: 44px;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+  color: #FFFFFF;
+
+  background: #53AEA7;
+  border: none;
+  border-radius: 8px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.animals-list-create svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.animals-list-create:hover {
+  background: #4A9D96;
+
+  box-shadow:
+    0px 4px 8px rgba(83, 174, 167, 0.25),
+    0px 8px 16px rgba(83, 174, 167, 0.15);
+}
+
+.animals-list-create:active {
+  background: #3D8980;
+}
+
+.animals-list-create:focus-visible {
+  outline: none;
+
+  box-shadow: 0px 0px 0px 3px #53AEA733;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .animals-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 16px;
+  }
+
+  .animals-list h1 {
+    font-size: 26px;
+    line-height: 34px;
+  }
+
+  .animals-list-description {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .animals-list-create {
+    width: 100%;
+
+    justify-content: center;
+  }
+}

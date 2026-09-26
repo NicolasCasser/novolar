@@ -1,0 +1,256 @@
+.request-animal-card {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 12px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  overflow: hidden;
+}
+
+/* Título */
+
+.request-animal-card-title {
+  margin: 0;
+  padding: 20px 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  box-sizing: border-box;
+
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 600;
+  color: #1F1F1F;
+
+  border-bottom: 1px solid #D6D6D6;
+}
+
+.request-animal-card-title svg {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  color: #53AEA7;
+}
+
+/* Imagem */
+
+.request-animal-card-image {
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  background: #F7F7F7;
+}
+
+.request-animal-card-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Corpo */
+
+.request-animal-card-body {
+  flex: 1;
+
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+}
+
+.request-animal-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.request-animal-card-name {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+  color: #1F1F1F;
+}
+
+.request-animal-card-breed {
+  margin: 4px 0 0;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+.request-animal-card-divider {
+  margin: 20px 0;
+
+  border-top: 1px solid #D6D6D6;
+}
+
+/* Características */
+
+.request-animal-card-characteristics {
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 16px;
+
+  list-style: none;
+}
+
+.request-animal-card-characteristics li {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.request-animal-card-label {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #7D7D7D;
+}
+
+.request-animal-card-value {
+  margin-top: 4px;
+
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.request-animal-card-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-weight: 400;
+}
+
+.request-animal-card-location svg {
+  width: 15px;
+  height: 15px;
+
+  flex-shrink: 0;
+
+  color: #53AEA7;
+}
+
+/* Link */
+
+.request-animal-card-link {
+  width: 100%;
+  height: 44px;
+  margin-top: 24px;
+
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 600;
+  color: #1F1F1F;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 8px;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.request-animal-card-link svg {
+  width: 17px;
+  height: 17px;
+
+  flex-shrink: 0;
+}
+
+.request-animal-card-link:hover {
+  color: #3D8980;
+
+  background: #E5F3F1;
+  border-color: #53AEA7;
+}
+
+.request-animal-card-link:focus-visible {
+  outline: none;
+
+  border-color: #53AEA7;
+
+  box-shadow: 0px 0px 0px 3px #53AEA733;
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .request-animal-card-image {
+    max-height: 420px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .request-animal-card-title {
+    padding: 16px 20px;
+
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .request-animal-card-image {
+    aspect-ratio: 4 / 3;
+  }
+
+  .request-animal-card-body {
+    padding: 20px;
+  }
+
+  .request-animal-card-name {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .request-animal-card-characteristics {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 16px;
+  }
+}
