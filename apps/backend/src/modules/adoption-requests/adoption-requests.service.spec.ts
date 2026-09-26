@@ -1,7 +1,8 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import { DataSource, FindOperator, UpdateResult } from 'typeorm';
+import type { QueryDeepPartialEntity } from 'typeorm';
 
 import { AdoptionRequestsService } from './adoption-requests.service';
 import { AdoptionRequest } from './entities/adoption-request.entity';
@@ -13,6 +14,15 @@ import { AnimalStatus } from '../animals/enums/animal-status.enum';
 import { LocationsService } from '../locations/locations.service';
 
 import { BrazilianState } from 'src/common/enums/brazilian-state.enum';
+
+// O service cancela as solicitacoes de um animal pelo par animalId + status
+// aceitos, o que o EntityManager.update tipa como "any". O mock declara os
+// argumentos reais para que as asserções nao dependam de any.
+
+type UpdateCriteria = {
+  animalId: string;
+  status: FindOperator<AdoptionRequestStatus>;
+};
 
 describe('AdoptionRequestsService', () => {
   let service: AdoptionRequestsService;
@@ -45,7 +55,14 @@ describe('AdoptionRequestsService', () => {
   const transactionManagerMock = {
     findOne: jest.fn(),
     save: jest.fn(),
-    update: jest.fn(),
+    update: jest.fn<
+      Promise<UpdateResult>,
+      [
+        typeof AdoptionRequest,
+        UpdateCriteria,
+        QueryDeepPartialEntity<AdoptionRequest>,
+      ]
+    >(),
   };
 
   const dataSourceMock = {
