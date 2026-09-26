@@ -32,7 +32,12 @@ interface RequireAuthProps {
 export function RequireAuth({ children }: RequireAuthProps) {
   const navigate = useNavigate();
 
-  const { loading, error } = useQuery(ME);
+  // O token expira antes do cookie, entao a sessao precisa ser revalidada a
+  // cada navegacao protegida. Com cache-first o Apollo responderia com o
+  // "me" guardado no login e a tela continuaria parecendo autenticada mesmo
+  // com o token expirado, so falhando na hora de salvar.
+
+  const { loading, error } = useQuery(ME, { fetchPolicy: 'network-only' });
 
   useEffect(() => {
     if (error) {
