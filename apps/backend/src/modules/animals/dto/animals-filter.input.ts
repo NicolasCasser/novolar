@@ -1,5 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import {
+  IsDate,
   IsEnum,
   IsInt,
   IsOptional,
@@ -12,6 +13,8 @@ import { BrazilianState } from 'src/common/enums/brazilian-state.enum';
 import { AnimalSex } from '../enums/animal-sex.enum';
 import { AnimalSize } from '../enums/animal-size.enum';
 import { AnimalSpecies } from '../enums/animal-species.enum';
+import { AnimalStatus } from '../enums/animal-status.enum';
+import { AnimalOrderBy } from '../enums/animal-order-by.enum';
 
 @InputType()
 export class AnimalsFilterInputDTO {
@@ -66,4 +69,24 @@ export class AnimalsFilterInputDTO {
   @IsInt()
   @Min(0)
   maxAgeInMonths?: number;
+
+  @Field(() => AnimalStatus, { nullable: true })
+  @IsOptional()
+  @IsEnum(AnimalStatus)
+  status?: AnimalStatus;
+
+  @Field(() => AnimalOrderBy, { nullable: true })
+  @IsOptional()
+  @IsEnum(AnimalOrderBy)
+  orderBy?: AnimalOrderBy;
+
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
+  @IsDate()
+  createdFrom?: Date;
+
+  @Field(() => Date, { nullable: true })
+  @IsOptional()
+  @IsDate()
+  createdTo?: Date;
 }

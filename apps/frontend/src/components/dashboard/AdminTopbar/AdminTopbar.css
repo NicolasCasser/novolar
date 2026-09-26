@@ -1,0 +1,125 @@
+.admin-topbar {
+  height: 65px;
+
+  padding: 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  border-bottom: 1px solid #D6D6D6;
+}
+
+/* Lado esquerdo */
+
+.admin-topbar-left {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.admin-topbar-menu {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+
+  color: #1F1F1F;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-topbar-menu svg {
+  width: 20px;
+  height: 20px;
+}
+
+.admin-topbar-menu:hover {
+  color: #3D8980;
+
+  background: #E5F3F1;
+}
+
+.admin-topbar-left h1 {
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+/* Usuário */
+
+.admin-topbar-user {
+  flex-shrink: 0;
+
+  padding-left: 24px;
+
+  display: flex;
+  flex-direction: column;
+
+  border-left: 1px solid #D6D6D6;
+}
+
+.admin-topbar-user-name {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.admin-topbar-user-role {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+  .admin-topbar {
+    padding: 0 16px;
+  }
+
+  .admin-topbar-left {
+    gap: 12px;
+  }
+
+  .admin-topbar-left h1 {
+    font-size: 18px;
+    line-height: 26px;
+  }
+
+  .admin-topbar-user {
+    padding-left: 16px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .admin-topbar-user {
+    display: none;
+  }
+}

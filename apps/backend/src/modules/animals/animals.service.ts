@@ -12,6 +12,7 @@ import { AnimalImage } from './entities/animal-image.entity';
 import { CreateAnimalInputDTO } from './dto/create-animal.input';
 import { UpdateAnimalInputDTO } from './dto/update-animal.input';
 import { AnimalStatus } from './enums/animal-status.enum';
+import { AnimalOrderBy } from './enums/animal-order-by.enum';
 import { AnimalsFilterInputDTO } from './dto/animals-filter.input';
 
 import { FilesService } from '../files/files.service';
@@ -108,6 +109,10 @@ export class AnimalsService {
       city,
       minAgeInMonths,
       maxAgeInMonths,
+      status,
+      orderBy,
+      createdFrom,
+      createdTo,
     } = filter;
 
     const query = this.animalsRepository
@@ -115,8 +120,16 @@ export class AnimalsService {
       .leftJoinAndSelect('animal.images', 'image')
       .leftJoinAndSelect('image.file', 'file')
       .where('animal.status = :status', {
-        status: AnimalStatus.AVAILABLE,
+        status: status ?? AnimalStatus.AVAILABLE,
       });
+
+    if (orderBy === AnimalOrderBy.CREATED_AT_DESC) {
+      query.orderBy('animal.createdAt', 'DESC');
+    }
+
+    if (orderBy === AnimalOrderBy.CREATED_AT_ASC) {
+      query.orderBy('animal.createdAt', 'ASC');
+    }
 
     if (search) {
       query.andWhere(
@@ -167,6 +180,14 @@ export class AnimalsService {
       query.andWhere('animal.ageInMonths <= :maxAgeInMonths', {
         maxAgeInMonths,
       });
+    }
+
+    if (createdFrom !== undefined) {
+      query.andWhere('animal.createdAt >= :createdFrom', { createdFrom });
+    }
+
+    if (createdTo !== undefined) {
+      query.andWhere('animal.createdAt <= :createdTo', { createdTo });
     }
 
     const [items, total] = await query

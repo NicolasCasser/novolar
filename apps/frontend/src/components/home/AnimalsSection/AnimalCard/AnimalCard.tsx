@@ -9,6 +9,7 @@ interface AnimalCardProps {
   state: string;
   species: string;
   imageUrl: string;
+  href?: string;
 }
 
 export function AnimalCard({
@@ -19,6 +20,7 @@ export function AnimalCard({
   state,
   species,
   imageUrl,
+  href = '#',
 }: AnimalCardProps) {
   return (
     <article className="animal-card">
@@ -45,7 +47,7 @@ export function AnimalCard({
           </span>
         </div>
 
-        <a href="#">Ver detalhes</a>
+        <a href={href}>Ver detalhes</a>
       </div>
     </article>
   );

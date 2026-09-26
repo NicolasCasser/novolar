@@ -1,0 +1,56 @@
+.request-status {
+  height: 24px;
+  padding: 0 10px;
+
+  display: inline-flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.request-status--pending,
+.request-status--canceled {
+  color: #7D7D7D;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+}
+
+.request-status--in_analysis {
+  color: #3D8980;
+
+  background: #E5F3F1;
+  border: 1px solid #BBDDD9;
+}
+
+.request-status--approved {
+  color: #FFFFFF;
+
+  background: #53AEA7;
+}
+
+.request-status--rejected {
+  color: #FFFFFF;
+
+  background: #EE765E;
+}
+
+/* Com icone */
+
+.request-status--with-icon {
+  gap: 6px;
+}
+
+.request-status--with-icon svg {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+}

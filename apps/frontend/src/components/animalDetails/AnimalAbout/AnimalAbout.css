@@ -1,0 +1,30 @@
+.animal-about h2 {
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.animal-about p {
+  margin: 12px 0 0;
+
+  font-size: 15px;
+  line-height: 26px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+.animal-about p + p {
+  margin-top: 16px;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .animal-about p {
+    font-size: 14px;
+    line-height: 24px;
+  }
+}

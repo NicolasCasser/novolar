@@ -1,0 +1,262 @@
+.admin-sidebar-overlay {
+  display: none;
+}
+
+/* Sidebar */
+
+.admin-sidebar {
+  width: 255px;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  border-right: 1px solid #D6D6D6;
+
+  overflow: hidden;
+}
+
+/* Conteudo em largura fixa, para a animacao de recolhimento
+   apenas recortar em vez de espremer os itens */
+
+.admin-sidebar-inner {
+  width: 255px;
+
+  height: 100%;
+
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Marca */
+
+.admin-sidebar-brand {
+  height: 65px;
+
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #D6D6D6;
+}
+
+.admin-sidebar-brand img {
+  width: 130px;
+  height: auto;
+}
+
+.admin-sidebar-close {
+  display: none;
+}
+
+/* Navegação */
+
+.admin-sidebar-nav {
+  flex: 1;
+
+  padding: 20px 13px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-sidebar-link {
+  height: 43px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  box-sizing: border-box;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #7D7D7D;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-sidebar-link svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.admin-sidebar-link:hover {
+  color: #1F1F1F;
+
+  background: #F7F7F7;
+}
+
+.admin-sidebar-link.active {
+  color: #FFFFFF;
+
+  background: #53AEA7;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+}
+
+.admin-sidebar-link.active:hover {
+  color: #FFFFFF;
+
+  background: #4A9D96;
+}
+
+/* Rodapé */
+
+.admin-sidebar-footer {
+  padding: 16px 13px;
+
+  border-top: 1px solid #D6D6D6;
+}
+
+.admin-sidebar-logout {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  box-sizing: border-box;
+
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #7D7D7D;
+
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-sidebar-logout svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.admin-sidebar-logout:hover {
+  color: #7A3429;
+
+  background: #FFF7F5;
+}
+
+/* Tablet */
+
+/* Desktop: sidebar recolhivel, animando a largura.
+   Cada contexto anima a propriedade certa: largura no desktop,
+   transform no drawer mobile. */
+
+@media (min-width: 1025px) {
+  .admin-sidebar {
+    transition: width 0.25s ease;
+  }
+
+  .admin-sidebar:not(.open) {
+    width: 0;
+
+    border-right-width: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .admin-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 40;
+
+    display: block;
+
+    background: #00000066;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity 0.2s ease;
+  }
+
+  .admin-sidebar-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    z-index: 50;
+
+    transform: translateX(-100%);
+
+    transition: transform 0.25s ease;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .admin-sidebar-close {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+
+    color: #7D7D7D;
+
+    cursor: pointer;
+
+    transition:
+      color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .admin-sidebar-close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .admin-sidebar-close:hover {
+    color: #1F1F1F;
+
+    background: #F7F7F7;
+  }
+}

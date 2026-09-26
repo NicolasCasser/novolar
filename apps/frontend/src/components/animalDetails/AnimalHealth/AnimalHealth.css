@@ -1,0 +1,80 @@
+.animal-health h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.animal-health h2 svg {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  color: #53AEA7;
+}
+
+/* Tags */
+
+.animal-health-list {
+  margin: 16px 0 0;
+  padding: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  list-style: none;
+}
+
+.animal-health-tag {
+  height: 34px;
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.animal-health-tag svg {
+  width: 15px;
+  height: 15px;
+
+  flex-shrink: 0;
+}
+
+.animal-health-tag.active {
+  color: #3D8980;
+
+  background: #E5F3F1;
+  border: 1px solid #BBDDD9;
+}
+
+.animal-health-tag.active svg {
+  color: #53AEA7;
+}
+
+.animal-health-tag:not(.active) {
+  color: #7D7D7D;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+}
+
+.animal-health-tag:not(.active) svg {
+  color: #7D7D7D;
+}

@@ -1,0 +1,108 @@
+.animal-characteristics {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  list-style: none;
+}
+
+/* Card */
+
+.animal-characteristic {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.animal-characteristic:hover {
+  border-color: #BBDDD9;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+}
+
+/* Ícone */
+
+.animal-characteristic-icon {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background: #E5F3F1;
+  border: 1px solid #BBDDD9;
+  border-radius: 9999px;
+}
+
+.animal-characteristic-icon svg {
+  width: 18px;
+  height: 18px;
+
+  color: #53AEA7;
+}
+
+/* Conteúdo */
+
+.animal-characteristic-content {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.animal-characteristic-label {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: #7D7D7D;
+}
+
+.animal-characteristic-value {
+  margin-top: 2px;
+
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  color: #1F1F1F;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .animal-characteristics {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+}

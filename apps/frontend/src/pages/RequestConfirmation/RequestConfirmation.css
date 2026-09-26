@@ -1,0 +1,166 @@
+.request-confirmation {
+  width: 100%;
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #D6D6D6;
+}
+
+/* Conteúdo centralizado */
+
+.request-confirmation-content {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 80px 80px 64px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+/* Card do animal */
+
+.request-confirmation-content > .confirmed-animal-card {
+  margin-top: 24px;
+}
+
+/* Ação */
+
+.request-confirmation-action {
+  margin-top: 32px;
+}
+
+.request-confirmation-button {
+  width: 246px;
+  height: 56px;
+
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  box-sizing: border-box;
+
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  color: #FFFFFF;
+
+  background: #53AEA7;
+  border: none;
+  border-radius: 8px;
+
+  box-shadow:
+    0px 2px 4px #0000001A,
+    0px 4px 6px #0000001A;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.request-confirmation-button svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.request-confirmation-button:hover {
+  background: #4A9D96;
+
+  box-shadow:
+    0px 4px 8px rgba(83, 174, 167, 0.25),
+    0px 8px 16px rgba(83, 174, 167, 0.15);
+}
+
+.request-confirmation-button:active {
+  background: #3D8980;
+}
+
+.request-confirmation-button:focus-visible {
+  outline: none;
+
+  box-shadow: 0px 0px 0px 3px #53AEA733;
+}
+
+/* Passos */
+
+.request-confirmation-content .next-steps-cards {
+  margin-top: 40px;
+}
+
+/* Estados de carregamento e erro */
+
+.request-confirmation-status {
+  width: 100%;
+
+  padding: 96px 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+}
+
+.request-confirmation-status p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .request-confirmation-content,
+  .request-confirmation-status {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+/* Tablet pequeno */
+
+@media (max-width: 768px) {
+  .request-confirmation-content {
+    padding: 64px 24px 56px;
+  }
+
+  .request-confirmation-status {
+    padding: 64px 24px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .request-confirmation-content {
+    padding: 48px 16px 40px;
+  }
+
+  .request-confirmation-action,
+  .request-confirmation-button {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .request-confirmation-content .next-steps-cards {
+    margin-top: 32px;
+  }
+
+  .request-confirmation-status {
+    padding: 64px 16px;
+  }
+}

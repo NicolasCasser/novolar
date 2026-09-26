@@ -511,6 +511,7 @@ function AnimalsSection() {
                 state={animal.state}
                 species={speciesLabels[animal.species]}
                 imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
+                href={`/animals/${animal.id}`}
               />
             );
           })}

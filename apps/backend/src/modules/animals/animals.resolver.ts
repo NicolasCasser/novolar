@@ -44,6 +44,12 @@ export class AnimalsResolver {
 
   @ResolveField(() => [AnimalImageDTO])
   async images(@Parent() animal: Animal): Promise<AnimalImageDTO[]> {
+    // A relacao pode nao estar carregada em caminhos que nao usam findAll,
+    // como AdoptionRequest.animal em respostas aninhadas.
+    if (!animal.images) {
+      return [];
+    }
+
     return Promise.all(
       animal.images.map(async (image) => ({
         ...image,

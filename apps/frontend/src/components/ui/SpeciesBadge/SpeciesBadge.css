@@ -1,0 +1,22 @@
+.species-badge {
+  height: 20px;
+  padding: 0 8px;
+
+  display: inline-flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  border: 1px solid #BBDDD9;
+
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #3D8980;
+
+  background: #E5F3F1E6;
+
+  white-space: nowrap;
+}
