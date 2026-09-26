@@ -34,10 +34,10 @@ export function RecentRequests({ requests, error }: RecentRequestsProps) {
           <p>Acompanhe as últimas intenções de adoção.</p>
         </div>
 
-        <button type="button" className="recent-requests-link">
+        <Link className="recent-requests-link" to="/dashboard/solicitacoes">
           Ver todas
           <ChevronRight />
-        </button>
+        </Link>
       </div>
 
       {error ? (

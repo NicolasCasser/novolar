@@ -1,4 +1,5 @@
 import { ChevronRight, MapPin, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import { speciesLabels } from '../../../utils/animals';
 import type { AnimalSpecies } from '../../../utils/animals';
@@ -71,10 +72,10 @@ export function RecentAnimals({ animals, error }: RecentAnimalsProps) {
       )}
 
       <div className="recent-animals-footer">
-        <button type="button" className="recent-animals-link">
+        <Link className="recent-animals-link" to="/dashboard/animais">
           Gerenciar catálogo
           <ChevronRight />
-        </button>
+        </Link>
       </div>
     </section>
   );
