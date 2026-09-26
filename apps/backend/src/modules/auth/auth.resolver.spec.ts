@@ -78,7 +78,7 @@ describe('AuthResolver', () => {
       expect(cookieMock).toHaveBeenCalledWith('accessToken', 'access-token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 1000 * 60 * 60,
       });
     });
@@ -120,7 +120,7 @@ describe('AuthResolver', () => {
       expect(clearCookieMock).toHaveBeenCalledWith('accessToken', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       });
     });
   });

@@ -14,6 +14,16 @@ interface GraphQLContext {
   res: Response;
 }
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const accessTokenCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
+} as const;
+
+const accessTokenMaxAge = 1000 * 60 * 60;
+
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
@@ -39,10 +49,8 @@ export class AuthResolver {
     const accessToken = this.authService.generateAccessToken(user);
 
     context.res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 60,
+      ...accessTokenCookieOptions,
+      maxAge: accessTokenMaxAge,
     });
 
     return {
@@ -56,11 +64,7 @@ export class AuthResolver {
 
   @Mutation(() => Boolean)
   logout(@Context() context: GraphQLContext): boolean {
-    context.res.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-    });
+    context.res.clearCookie('accessToken', accessTokenCookieOptions);
 
     return true;
   }
