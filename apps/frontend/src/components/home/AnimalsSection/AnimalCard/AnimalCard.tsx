@@ -1,14 +1,18 @@
 import './AnimalCard.css';
 import { Clock3, MapPin } from 'lucide-react';
 
+import { SpeciesBadge } from '../../../ui/SpeciesBadge/SpeciesBadge';
+import type { AnimalSpecies } from '../../../../utils/animals';
+
 interface AnimalCardProps {
   name: string;
   breed: string;
   age: string;
   city: string;
   state: string;
-  species: string;
+  species: AnimalSpecies;
   imageUrl: string;
+  href?: string;
 }
 
 export function AnimalCard({
@@ -19,13 +23,14 @@ export function AnimalCard({
   state,
   species,
   imageUrl,
+  href = '#',
 }: AnimalCardProps) {
   return (
     <article className="animal-card">
       <div className="animal-card-image">
         <img src={imageUrl} alt={name} />
 
-        <span className="animal-card-species">{species}</span>
+        <SpeciesBadge species={species} />
       </div>
 
       <div className="animal-card-content">
@@ -45,7 +50,7 @@ export function AnimalCard({
           </span>
         </div>
 
-        <a href="#">Ver detalhes</a>
+        <a href={href}>Ver detalhes</a>
       </div>
     </article>
   );

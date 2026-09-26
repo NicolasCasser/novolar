@@ -1,0 +1,106 @@
+.next-steps-cards {
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+
+  list-style: none;
+}
+
+/* Card */
+
+.next-steps-card {
+  min-width: 0;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+  border-radius: 12px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.next-steps-card:hover {
+  box-shadow:
+    0px 4px 8px #0000001A,
+    0px 8px 16px #00000012;
+
+  transform: translateY(-2px);
+}
+
+/* Ícone */
+
+.next-steps-card-icon {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background: #E5F3F1;
+  border: 1px solid #BBDDD9;
+  border-radius: 10px;
+}
+
+.next-steps-card-icon svg {
+  width: 18px;
+  height: 18px;
+
+  color: #53AEA7;
+}
+
+/* Conteúdo */
+
+.next-steps-card h2 {
+  margin: 16px 0 0;
+
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.next-steps-card p {
+  margin: 8px 0 0;
+
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+  .next-steps-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+  .next-steps-cards {
+    grid-template-columns: minmax(0, 1fr);
+
+    gap: 16px;
+  }
+}

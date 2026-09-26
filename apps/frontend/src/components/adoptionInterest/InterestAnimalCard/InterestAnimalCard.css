@@ -1,0 +1,128 @@
+.interest-animal-card {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 8px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  overflow: hidden;
+}
+
+/* Imagem */
+
+.interest-animal-card-image {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+}
+
+.interest-animal-card-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Conteúdo */
+
+.interest-animal-card-content {
+  padding: 20px;
+}
+
+.interest-animal-card-content h2 {
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.interest-animal-card-breed {
+  margin: 4px 0 0;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+.interest-animal-card-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 14px;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #1F1F1F;
+}
+
+.interest-animal-card-location svg {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+
+  color: #53AEA7;
+}
+
+/* Aviso */
+
+.interest-animal-card-note {
+  margin-top: 18px;
+
+  padding: 12px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  box-sizing: border-box;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+  border-radius: 8px;
+}
+
+.interest-animal-card-note svg {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+
+  margin-top: 1px;
+
+  color: #53AEA7;
+}
+
+.interest-animal-card-note p {
+  margin: 0;
+
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .interest-animal-card-image {
+    aspect-ratio: 4 / 3;
+  }
+}

@@ -1,0 +1,79 @@
+.interest-steps h2 {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+/* Lista */
+
+.interest-steps-list {
+  margin: 16px 0 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  list-style: none;
+}
+
+.interest-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Marcador */
+
+.interest-step-marker {
+  width: 24px;
+  height: 24px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border-radius: 9999px;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.interest-step.active .interest-step-marker {
+  color: #FFFFFF;
+
+  background: #53AEA7;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+}
+
+.interest-step:not(.active) .interest-step-marker {
+  color: #7D7D7D;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+}
+
+/* Rótulo */
+
+.interest-step-label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+.interest-step.active .interest-step-label {
+  font-weight: 600;
+  color: #1F1F1F;
+}

@@ -1,0 +1,189 @@
+.adoption-interest {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Cabeçalho da página */
+
+/* 1240px de conteudo + 160px de padding = 1400px, alinhado com o layout */
+
+.adoption-interest-header {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 32px 80px 40px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #D6D6D6;
+}
+
+.adoption-interest-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #7D7D7D;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.adoption-interest-back svg {
+  width: 16px;
+  height: 16px;
+
+  transition: transform 0.2s ease;
+}
+
+.adoption-interest-back:hover {
+  color: #3D8980;
+}
+
+.adoption-interest-back:hover svg {
+  transform: translateX(-2px);
+}
+
+.adoption-interest-header h1 {
+  margin: 20px 0 0;
+
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 700;
+  color: #1F1F1F;
+}
+
+.adoption-interest-header p {
+  margin: 8px 0 0;
+
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Layout */
+
+.adoption-interest-layout {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 40px 80px 96px;
+
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 30px;
+  align-items: start;
+
+  box-sizing: border-box;
+}
+
+.adoption-interest-sidebar {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Estados de carregamento e erro */
+
+.adoption-interest-status {
+  width: 100%;
+
+  padding: 96px 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+}
+
+.adoption-interest-status p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .adoption-interest-header,
+  .adoption-interest-layout,
+  .adoption-interest-status {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .adoption-interest-layout {
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+/* Tablet pequeno */
+
+@media (max-width: 900px) {
+  .adoption-interest-layout {
+    grid-template-columns: minmax(0, 1fr);
+
+    padding-top: 32px;
+
+    gap: 32px;
+  }
+
+  .adoption-interest-sidebar {
+    max-width: 420px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .adoption-interest-header,
+  .adoption-interest-layout,
+  .adoption-interest-status {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .adoption-interest-header {
+    padding-top: 24px;
+    padding-bottom: 32px;
+  }
+
+  .adoption-interest-header h1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .adoption-interest-header p {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .adoption-interest-layout {
+    padding-top: 24px;
+    padding-bottom: 64px;
+  }
+
+  .adoption-interest-sidebar {
+    max-width: none;
+  }
+
+  .adoption-interest-status {
+    padding: 64px 16px;
+  }
+}

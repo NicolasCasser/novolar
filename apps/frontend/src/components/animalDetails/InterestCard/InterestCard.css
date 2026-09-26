@@ -1,0 +1,139 @@
+.interest-card {
+  width: 100%;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+  border-radius: 16px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+}
+
+/* Cabeçalho */
+
+.interest-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.interest-card-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background: #E5F3F1;
+  border: 1px solid #BBDDD9;
+  border-radius: 9999px;
+}
+
+.interest-card-icon svg {
+  width: 24px;
+  height: 24px;
+
+  color: #53AEA7;
+}
+
+.interest-card-text {
+  min-width: 0;
+}
+
+.interest-card-text h2 {
+  margin: 0;
+
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.interest-card-text p {
+  margin: 4px 0 0;
+
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Botão */
+
+.interest-card-button {
+  width: 240px;
+  height: 48px;
+  margin: 24px auto 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
+  color: #FFFFFF;
+
+  background: #53AEA7;
+  border: none;
+  border-radius: 8px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.interest-card-button:hover {
+  background: #4A9D96;
+
+  box-shadow:
+    0px 4px 8px rgba(83, 174, 167, 0.25),
+    0px 8px 16px rgba(83, 174, 167, 0.15);
+}
+
+.interest-card-button:active {
+  background: #3D8980;
+}
+
+.interest-card-button:focus-visible {
+  outline: none;
+
+  box-shadow: 0px 0px 0px 3px #53AEA733;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .interest-card {
+    padding: 20px;
+  }
+
+  .interest-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .interest-card-button {
+    width: 100%;
+  }
+}

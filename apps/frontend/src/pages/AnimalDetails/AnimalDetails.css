@@ -1,0 +1,235 @@
+.animal-details {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Barra de navegação da tela */
+
+.animal-details-toolbar {
+  width: 100%;
+  height: 65px;
+
+  padding: 0 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #D6D6D6;
+}
+
+.animal-details-back {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #7D7D7D;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.animal-details-back svg {
+  width: 16px;
+  height: 16px;
+
+  transition: transform 0.2s ease;
+}
+
+.animal-details-back:hover {
+  color: #3D8980;
+}
+
+.animal-details-back:hover svg {
+  transform: translateX(-2px);
+}
+
+/* Compartilhar */
+
+.animal-details-share {
+  height: 40px;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  color: #1F1F1F;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 9999px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.animal-details-share svg {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+}
+
+.animal-details-share:hover {
+  color: #3D8980;
+
+  background: #E5F3F1;
+  border-color: #53AEA7;
+}
+
+.animal-details-share:focus-visible {
+  outline: none;
+
+  border-color: #53AEA7;
+
+  box-shadow: 0px 0px 0px 3px #53AEA733;
+}
+
+/* Conteúdo principal */
+
+/* Galeria com largura fixa e informacoes ocupando o restante */
+
+.animal-details-main {
+  width: 100%;
+  max-width: 1440px;
+
+  margin: 0 auto;
+  padding: 56px 80px 88px;
+
+  display: grid;
+  grid-template-columns: 560px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+
+  box-sizing: border-box;
+}
+
+.animal-details-info {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Estados de carregamento e erro */
+
+.animal-details-status {
+  width: 100%;
+
+  padding: 96px 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+}
+
+.animal-details-status p {
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Coluna unica: a galeria de 560px + informacoes deixa de caber em 2 colunas */
+
+@media (max-width: 1240px) {
+  .animal-details-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .animal-details-main > .animal-gallery {
+    max-width: 560px;
+  }
+
+  .animal-details-info {
+    max-width: 720px;
+  }
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .animal-details-toolbar {
+    padding: 0 40px;
+  }
+
+  .animal-details-main {
+    padding: 40px 40px 56px;
+
+    gap: 40px;
+  }
+}
+
+/* Tablet pequeno */
+
+@media (max-width: 768px) {
+  .animal-details-toolbar {
+    padding: 0 24px;
+  }
+
+  .animal-details-main {
+    padding: 32px 24px 48px;
+
+    gap: 32px;
+  }
+
+  .animal-details-info {
+    gap: 24px;
+  }
+
+  .animal-details-status {
+    padding: 64px 24px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .animal-details-toolbar {
+    height: auto;
+
+    padding: 16px;
+
+    gap: 12px;
+  }
+
+  .animal-details-main {
+    padding: 24px 16px 40px;
+  }
+
+  .animal-details-share {
+    height: 36px;
+    padding: 0 12px;
+
+    font-size: 13px;
+  }
+
+  .animal-details-status {
+    padding: 48px 16px;
+  }
+}
