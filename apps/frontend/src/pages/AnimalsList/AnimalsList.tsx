@@ -3,6 +3,7 @@ import type { TypedDocumentNode } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { ClipboardList, PawPrint, Plus, TrendingUp } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import './AnimalsList.css';
 
@@ -123,6 +124,8 @@ function startOfCurrentMonth(): string {
 }
 
 function AnimalsList() {
+  const navigate = useNavigate();
+
   const [filters, setFilters] = useState(initialFilters);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -265,7 +268,11 @@ function AnimalsList() {
             </p>
           </div>
 
-          <button type="button" className="animals-list-create">
+          <button
+            type="button"
+            className="animals-list-create"
+            onClick={() => navigate('/dashboard/animais/novo')}
+          >
             <Plus />
             Novo animal
           </button>

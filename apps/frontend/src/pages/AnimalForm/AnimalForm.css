@@ -1,0 +1,353 @@
+.animal-form {
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 0 auto;
+}
+
+/* Voltar */
+
+.animal-form-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #7D7D7D;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.animal-form-back svg {
+  width: 16px;
+  height: 16px;
+
+  transition: transform 0.2s ease;
+}
+
+.animal-form-back:hover {
+  color: #3D8980;
+}
+
+.animal-form-back:hover svg {
+  transform: translateX(-2px);
+}
+
+/* Cabeçalho */
+
+.animal-form-header {
+  margin-top: 20px;
+}
+
+.animal-form-header h1 {
+  margin: 0;
+
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+  color: #1F1F1F;
+}
+
+.animal-form-header p {
+  margin: 4px 0 0;
+
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Seções */
+
+.animal-form-sections {
+  margin-top: 28px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Grade */
+
+.animal-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+}
+
+.animal-form-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Campo */
+
+.animal-form-field {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.animal-form-label {
+  margin-bottom: 8px;
+
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.animal-form-label span {
+  color: #7D7D7D;
+}
+
+.animal-form-field input,
+.animal-form-field select,
+.animal-form-field textarea {
+  width: 100%;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #1F1F1F;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 8px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.animal-form-field input,
+.animal-form-field select {
+  height: 44px;
+}
+
+.animal-form-field select {
+  padding-right: 34px;
+
+  cursor: pointer;
+
+  appearance: none;
+
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237D7D7D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.animal-form-field textarea {
+  min-height: 156px;
+  padding: 12px;
+
+  resize: vertical;
+}
+
+.animal-form-field input::placeholder,
+.animal-form-field textarea::placeholder {
+  color: #7D7D7D;
+}
+
+.animal-form-field input:focus,
+.animal-form-field select:focus,
+.animal-form-field textarea:focus {
+  border-color: #53AEA7;
+
+  box-shadow: 0px 0px 0px 3px #53AEA71A;
+}
+
+.animal-form-field input:disabled,
+.animal-form-field select:disabled,
+.animal-form-field textarea:disabled {
+  background: #F7F7F7;
+
+  color: #7D7D7D;
+
+  cursor: not-allowed;
+}
+
+/* Características */
+
+.animal-form-field .form-checkbox {
+  margin-top: 12px;
+}
+
+/* Alinha os checkboxes com o campo de idade, abaixo do rotulo. */
+
+.animal-form-check {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  margin-top: 26px;
+}
+
+/* Erro */
+
+.animal-form-error {
+  margin: 24px 0 0;
+
+  padding: 10px 12px;
+
+  box-sizing: border-box;
+
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #7A3429;
+
+  background: #FFF7F5;
+  border: 1px solid #F1C2BA;
+  border-radius: 8px;
+}
+
+/* Ações */
+
+.animal-form-actions {
+  margin-top: 32px;
+  padding-top: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+
+  border-top: 1px solid #D6D6D6;
+}
+
+.animal-form-cancel,
+.animal-form-submit {
+  height: 44px;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+  color: #1F1F1F;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 8px;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.animal-form-cancel:hover:not(:disabled) {
+  color: #3D8980;
+
+  background: #E5F3F1;
+  border-color: #53AEA7;
+}
+
+.animal-form-submit {
+  font-weight: 600;
+  color: #FFFFFF;
+
+  background: #53AEA7;
+  border-color: #53AEA7;
+
+  box-shadow:
+    0px 2px 4px #0000001A,
+    0px 4px 6px #0000001A;
+}
+
+.animal-form-submit svg {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+.animal-form-submit:hover:not(:disabled) {
+  background: #4A9D96;
+  border-color: #4A9D96;
+
+  box-shadow:
+    0px 4px 8px rgba(83, 174, 167, 0.25),
+    0px 8px 16px rgba(83, 174, 167, 0.15);
+}
+
+.animal-form-submit:active:not(:disabled) {
+  background: #3D8980;
+  border-color: #3D8980;
+}
+
+.animal-form-cancel:focus-visible,
+.animal-form-submit:focus-visible {
+  outline: none;
+
+  box-shadow: 0px 0px 0px 3px #53AEA733;
+}
+
+.animal-form-cancel:disabled,
+.animal-form-submit:disabled {
+  opacity: 0.4;
+
+  cursor: not-allowed;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .animal-form-grid,
+  .animal-form-grid--three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .animal-form-check {
+    margin-top: 0;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .animal-form-header h1 {
+    font-size: 26px;
+    line-height: 34px;
+  }
+
+  .animal-form-header p {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .animal-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .animal-form-cancel,
+  .animal-form-submit {
+    width: 100%;
+  }
+}

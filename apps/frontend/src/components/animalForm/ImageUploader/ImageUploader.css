@@ -1,0 +1,270 @@
+.image-uploader-input {
+  display: none;
+}
+
+/* Grade */
+
+.image-uploader {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Area de envio */
+
+.image-uploader-dropzone {
+  grid-column: span 2;
+
+  aspect-ratio: 2 / 1;
+
+  min-width: 0;
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  background: #FFFFFF;
+  border: 1px dashed #D6D6D6;
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.image-uploader-dropzone:hover,
+.image-uploader-dropzone.dragging {
+  background: #E5F3F1;
+  border-color: #53AEA7;
+}
+
+.image-uploader-dropzone.disabled {
+  background: #F7F7F7;
+
+  cursor: not-allowed;
+}
+
+.image-uploader-dropzone svg {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 6px;
+
+  color: #53AEA7;
+}
+
+.image-uploader-dropzone strong {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #1F1F1F;
+}
+
+.image-uploader-dropzone span {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  color: #7D7D7D;
+}
+
+/* Foto selecionada */
+
+.image-uploader-item {
+  position: relative;
+
+  aspect-ratio: 1 / 1;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  background: #F7F7F7;
+  border: 1px solid #D6D6D6;
+  border-radius: 12px;
+}
+
+.image-uploader-item img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.image-uploader-item button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  width: 28px;
+  height: 28px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  color: #1F1F1F;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 9999px;
+
+  box-shadow:
+    0px 1px 2px #0000001A,
+    0px 1px 3px #0000001A;
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.image-uploader-item button svg {
+  width: 15px;
+  height: 15px;
+}
+
+.image-uploader-item:hover button,
+.image-uploader-item:focus-within button {
+  opacity: 1;
+}
+
+.image-uploader-item button:hover {
+  color: #7A3429;
+
+  background: #FFF7F5;
+  border-color: #F1C2BA;
+}
+
+.image-uploader-item button:focus-visible {
+  outline: none;
+
+  opacity: 1;
+
+  box-shadow: 0px 0px 0px 3px #53AEA733;
+}
+
+/* Slot vazio */
+
+.image-uploader-slot {
+  aspect-ratio: 1 / 1;
+
+  min-width: 0;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  background: #FFFFFF;
+  border: 1px solid #D6D6D6;
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.image-uploader-slot svg {
+  width: 20px;
+  height: 20px;
+
+  color: #D6D6D6;
+
+  transition: color 0.2s ease;
+}
+
+.image-uploader-slot:hover:not(:disabled) {
+  background: #E5F3F1;
+  border-color: #53AEA7;
+}
+
+.image-uploader-slot:hover:not(:disabled) svg {
+  color: #53AEA7;
+}
+
+.image-uploader-slot:focus-visible {
+  outline: none;
+
+  border-color: #53AEA7;
+  box-shadow: 0px 0px 0px 3px #53AEA71A;
+}
+
+.image-uploader-slot:disabled {
+  background: #F7F7F7;
+
+  cursor: not-allowed;
+}
+
+/* Erro */
+
+.image-uploader-error {
+  margin: 12px 0 0;
+
+  padding: 10px 12px;
+
+  box-sizing: border-box;
+
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #7A3429;
+
+  background: #FFF7F5;
+  border: 1px solid #F1C2BA;
+  border-radius: 8px;
+}
+
+/* Tablet */
+
+@media (max-width: 1200px) {
+  .image-uploader {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .image-uploader {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .image-uploader {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+  }
+
+  .image-uploader-dropzone {
+    grid-column: span 2;
+  }
+
+  .image-uploader-item button {
+    opacity: 1;
+  }
+}

@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import AdoptionInterest from './pages/AdoptionInterest/AdoptionInterest';
 import AnimalDetails from './pages/AnimalDetails/AnimalDetails';
+import AnimalForm from './pages/AnimalForm/AnimalForm';
 import AnimalsList from './pages/AnimalsList/AnimalsList';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Home from './pages/Home/Home';
@@ -29,6 +30,14 @@ function App() {
           element={
             <RequireAuth>
               <AnimalsList />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/dashboard/animais/novo"
+          element={
+            <RequireAuth>
+              <AnimalForm />
             </RequireAuth>
           }
         />
