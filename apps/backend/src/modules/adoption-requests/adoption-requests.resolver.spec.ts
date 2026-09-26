@@ -32,9 +32,7 @@ describe('AdoptionRequestsResolver', () => {
       ],
     }).compile();
 
-    resolver = module.get<AdoptionRequestsResolver>(
-      AdoptionRequestsResolver,
-    );
+    resolver = module.get<AdoptionRequestsResolver>(AdoptionRequestsResolver);
   });
 
   it('should be defined', () => {
@@ -108,9 +106,7 @@ describe('AdoptionRequestsResolver', () => {
       expect(result).toEqual(adoptionRequestsResponse);
 
       expect(adoptionRequestsServiceMock.findAll).toHaveBeenCalledTimes(1);
-      expect(adoptionRequestsServiceMock.findAll).toHaveBeenCalledWith(
-        filter,
-      );
+      expect(adoptionRequestsServiceMock.findAll).toHaveBeenCalledWith(filter);
     });
   });
 
@@ -122,9 +118,7 @@ describe('AdoptionRequestsResolver', () => {
         status: AdoptionRequestStatus.PENDING,
       };
 
-      adoptionRequestsServiceMock.findById.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsServiceMock.findById.mockResolvedValue(adoptionRequest);
 
       const result = await resolver.adoptionRequest('request-1');
 
@@ -141,9 +135,9 @@ describe('AdoptionRequestsResolver', () => {
         new NotFoundException('Adoption request not found'),
       );
 
-      await expect(
-        resolver.adoptionRequest('request-1'),
-      ).rejects.toThrow('Adoption request not found');
+      await expect(resolver.adoptionRequest('request-1')).rejects.toThrow(
+        'Adoption request not found',
+      );
 
       expect(adoptionRequestsServiceMock.findById).toHaveBeenCalledTimes(1);
       expect(adoptionRequestsServiceMock.findById).toHaveBeenCalledWith(
@@ -170,9 +164,7 @@ describe('AdoptionRequestsResolver', () => {
         status: AdoptionRequestStatus.PENDING,
       };
 
-      adoptionRequestsServiceMock.create.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsServiceMock.create.mockResolvedValue(adoptionRequest);
 
       const result = await resolver.createAdoptionRequest(input);
 
@@ -194,18 +186,17 @@ describe('AdoptionRequestsResolver', () => {
         adoptionRequest,
       );
 
-      const result =
-        await resolver.startAdoptionRequestAnalysis('request-id');
+      const result = await resolver.startAdoptionRequestAnalysis('request-id');
 
       expect(result).toEqual(adoptionRequest);
 
-      expect(
-        adoptionRequestsServiceMock.startAnalysis,
-      ).toHaveBeenCalledTimes(1);
+      expect(adoptionRequestsServiceMock.startAnalysis).toHaveBeenCalledTimes(
+        1,
+      );
 
-      expect(
-        adoptionRequestsServiceMock.startAnalysis,
-      ).toHaveBeenCalledWith('request-id');
+      expect(adoptionRequestsServiceMock.startAnalysis).toHaveBeenCalledWith(
+        'request-id',
+      );
     });
   });
 
@@ -216,9 +207,7 @@ describe('AdoptionRequestsResolver', () => {
         status: AdoptionRequestStatus.REJECTED,
       };
 
-      adoptionRequestsServiceMock.reject.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsServiceMock.reject.mockResolvedValue(adoptionRequest);
 
       const result = await resolver.rejectAdoptionRequest('request-id');
 
@@ -238,9 +227,7 @@ describe('AdoptionRequestsResolver', () => {
         status: AdoptionRequestStatus.APPROVED,
       };
 
-      adoptionRequestsServiceMock.approve.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsServiceMock.approve.mockResolvedValue(adoptionRequest);
 
       const result = await resolver.approveAdoptionRequest('request-id');
 

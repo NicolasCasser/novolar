@@ -51,9 +51,7 @@ describe('AdoptionRequestsService', () => {
   const dataSourceMock = {
     transaction: jest.fn(
       async (
-        callback: (
-          manager: typeof transactionManagerMock,
-        ) => Promise<unknown>,
+        callback: (manager: typeof transactionManagerMock) => Promise<unknown>,
       ) => callback(transactionManagerMock),
     ),
   };
@@ -128,9 +126,7 @@ describe('AdoptionRequestsService', () => {
 
       expect(result).toEqual(adoptionRequest);
 
-      expect(animalsServiceMock.findById).toHaveBeenCalledWith(
-        input.animalId,
-      );
+      expect(animalsServiceMock.findById).toHaveBeenCalledWith(input.animalId);
 
       expect(locationsServiceMock.validateCity).toHaveBeenCalledWith(
         input.state,
@@ -164,9 +160,7 @@ describe('AdoptionRequestsService', () => {
       });
 
       await expect(service.create(input)).rejects.toThrow(
-        new BadRequestException(
-          'This animal is not available for adoption',
-        ),
+        new BadRequestException('This animal is not available for adoption'),
       );
 
       expect(locationsServiceMock.validateCity).not.toHaveBeenCalled();
@@ -193,9 +187,7 @@ describe('AdoptionRequestsService', () => {
       locationsServiceMock.validateCity.mockResolvedValue(false);
 
       await expect(service.create(input)).rejects.toThrow(
-        new BadRequestException(
-          'City does not belong to the selected state',
-        ),
+        new BadRequestException('City does not belong to the selected state'),
       );
 
       expect(locationsServiceMock.validateCity).toHaveBeenCalledWith(
@@ -346,9 +338,7 @@ describe('AdoptionRequestsService', () => {
         applicantName: 'João',
       };
 
-      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(adoptionRequest);
 
       const result = await service.findById('request-id');
 
@@ -393,12 +383,8 @@ describe('AdoptionRequestsService', () => {
         status: AdoptionRequestStatus.PENDING,
       };
 
-      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(
-        adoptionRequest,
-      );
-      adoptionRequestsRepositoryMock.save.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(adoptionRequest);
+      adoptionRequestsRepositoryMock.save.mockResolvedValue(adoptionRequest);
 
       const result = await service.startAnalysis('request-id');
 
@@ -415,13 +401,9 @@ describe('AdoptionRequestsService', () => {
         status: AdoptionRequestStatus.IN_ANALYSIS,
       };
 
-      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(adoptionRequest);
 
-      await expect(
-        service.startAnalysis('request-id'),
-      ).rejects.toThrow(
+      await expect(service.startAnalysis('request-id')).rejects.toThrow(
         new BadRequestException(
           'Only pending adoption requests can be moved to analysis',
         ),
@@ -438,12 +420,8 @@ describe('AdoptionRequestsService', () => {
         status: AdoptionRequestStatus.PENDING,
       };
 
-      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(
-        adoptionRequest,
-      );
-      adoptionRequestsRepositoryMock.save.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(adoptionRequest);
+      adoptionRequestsRepositoryMock.save.mockResolvedValue(adoptionRequest);
 
       const result = await service.reject('request-id');
 
@@ -460,12 +438,8 @@ describe('AdoptionRequestsService', () => {
         status: AdoptionRequestStatus.IN_ANALYSIS,
       };
 
-      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(
-        adoptionRequest,
-      );
-      adoptionRequestsRepositoryMock.save.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(adoptionRequest);
+      adoptionRequestsRepositoryMock.save.mockResolvedValue(adoptionRequest);
 
       const result = await service.reject('request-id');
 
@@ -482,9 +456,7 @@ describe('AdoptionRequestsService', () => {
         status: AdoptionRequestStatus.APPROVED,
       };
 
-      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(
-        adoptionRequest,
-      );
+      adoptionRequestsRepositoryMock.findOne.mockResolvedValue(adoptionRequest);
 
       await expect(service.reject('request-id')).rejects.toThrow(
         new BadRequestException(
@@ -586,9 +558,7 @@ describe('AdoptionRequestsService', () => {
 
       await service.approve('request-id');
 
-      expect(adoptionRequest.status).toBe(
-        AdoptionRequestStatus.APPROVED,
-      );
+      expect(adoptionRequest.status).toBe(AdoptionRequestStatus.APPROVED);
 
       expect(animal.status).toBe(AnimalStatus.ADOPTED);
     });
@@ -662,9 +632,7 @@ describe('AdoptionRequestsService', () => {
         .mockResolvedValueOnce(animal);
 
       await expect(service.approve('request-id')).rejects.toThrow(
-        new BadRequestException(
-          'This animal is not available for adoption',
-        ),
+        new BadRequestException('This animal is not available for adoption'),
       );
 
       expect(transactionManagerMock.save).not.toHaveBeenCalled();
