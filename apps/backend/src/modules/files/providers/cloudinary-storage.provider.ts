@@ -1,18 +1,14 @@
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary } from 'cloudinary';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { StorageProvider } from './storage.provider';
 
 @Injectable()
-export class CloudinaryStorageProvider
-  implements StorageProvider, OnModuleInit
-{
+export class CloudinaryStorageProvider implements StorageProvider {
   private readonly folder = 'novolar';
 
-  constructor(private readonly configService: ConfigService) {}
-
-  onModuleInit(): void {
+  constructor(private readonly configService: ConfigService) {
     cloudinary.config({
       cloud_name: this.configService.getOrThrow('CLOUDINARY_CLOUD_NAME'),
       api_key: this.configService.getOrThrow('CLOUDINARY_API_KEY'),

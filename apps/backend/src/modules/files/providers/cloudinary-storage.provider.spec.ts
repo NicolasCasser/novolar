@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
 import { v2 as cloudinary } from 'cloudinary';
 
 import { CloudinaryStorageProvider } from './cloudinary-storage.provider';
@@ -25,7 +24,7 @@ describe('CloudinaryStorageProvider', () => {
     CLOUDINARY_API_SECRET: 'test-secret',
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
 
     configService = {
@@ -33,24 +32,18 @@ describe('CloudinaryStorageProvider', () => {
         (key: string) => mockConfig[key as keyof typeof mockConfig],
       ),
     } as unknown as jest.Mocked<ConfigService>;
-
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CloudinaryStorageProvider,
-        { provide: ConfigService, useValue: configService },
-      ],
-    }).compile();
-
-    provider = module.get<CloudinaryStorageProvider>(CloudinaryStorageProvider);
   });
 
+  const createProvider = () => new CloudinaryStorageProvider(configService);
+
   it('should be defined', () => {
+    provider = createProvider();
     expect(provider).toBeDefined();
   });
 
-  describe('onModuleInit', () => {
+  describe('constructor', () => {
     it('should configure cloudinary with credentials from config', () => {
-      provider.onModuleInit();
+      createProvider();
 
       expect(cloudinary.config).toHaveBeenCalledTimes(1);
       expect(cloudinary.config).toHaveBeenCalledWith({
@@ -67,11 +60,15 @@ describe('CloudinaryStorageProvider', () => {
         return mockConfig[key as keyof typeof mockConfig];
       });
 
-      expect(() => provider.onModuleInit()).toThrow('Missing');
+      expect(() => createProvider()).toThrow('Missing');
     });
   });
 
   describe('upload', () => {
+    beforeEach(() => {
+      provider = createProvider();
+    });
+
     it('should upload file to cloudinary with correct public_id', async () => {
       const file = Buffer.from('file content');
       const key = 'files/image.jpg';
@@ -121,6 +118,10 @@ describe('CloudinaryStorageProvider', () => {
   });
 
   describe('delete', () => {
+    beforeEach(() => {
+      provider = createProvider();
+    });
+
     it('should delete file from cloudinary with correct public_id', async () => {
       const key = 'files/image.jpg';
 
@@ -162,6 +163,10 @@ describe('CloudinaryStorageProvider', () => {
   });
 
   describe('getUrl', () => {
+    beforeEach(() => {
+      provider = createProvider();
+    });
+
     it('should return optimized cloudinary url', async () => {
       const key = 'files/image.jpg';
       const expectedUrl =

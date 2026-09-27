@@ -14,19 +14,15 @@ import { STORAGE_PROVIDER } from './providers/storage.provider';
   controllers: [FilesController],
   providers: [
     FilesService,
-    LocalStorageProvider,
-    CloudinaryStorageProvider,
     {
       provide: STORAGE_PROVIDER,
-      useFactory: (
-        configService: ConfigService,
-        localProvider: LocalStorageProvider,
-        cloudinaryProvider: CloudinaryStorageProvider,
-      ) => {
+      useFactory: (configService: ConfigService) => {
         const nodeEnv = configService.get<string>('NODE_ENV');
-        return nodeEnv === 'production' ? cloudinaryProvider : localProvider;
+        return nodeEnv === 'production'
+          ? new CloudinaryStorageProvider(configService)
+          : new LocalStorageProvider();
       },
-      inject: [ConfigService, LocalStorageProvider, CloudinaryStorageProvider],
+      inject: [ConfigService],
     },
   ],
   exports: [FilesService],
