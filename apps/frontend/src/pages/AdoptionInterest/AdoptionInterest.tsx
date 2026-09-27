@@ -14,6 +14,7 @@ import { InterestAnimalCard } from '../../components/adoptionInterest/InterestAn
 import { InterestSteps } from '../../components/adoptionInterest/InterestSteps/InterestSteps';
 import type { AnimalSpecies } from '../../utils/animals';
 import type { BrazilianState } from '../../utils/locations';
+import { resolveImageUrl } from '../../utils/images';
 
 type AnimalData = {
   animal: {
@@ -81,8 +82,6 @@ const CREATE_ADOPTION_REQUEST: TypedDocumentNode<
     }
   }
 `;
-
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
 
 const initialValues = {
   applicantName: '',
@@ -203,7 +202,7 @@ function AdoptionInterest() {
               species={animal.species}
               city={animal.city}
               state={animal.state}
-              imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
+              imageUrl={primaryImage ? resolveImageUrl(primaryImage.url) : ''}
             />
 
             <InterestSteps />

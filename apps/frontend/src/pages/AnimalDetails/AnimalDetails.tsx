@@ -17,6 +17,7 @@ import { AnimalSummary } from '../../components/animalDetails/AnimalSummary/Anim
 import { InterestCard } from '../../components/animalDetails/InterestCard/InterestCard';
 import { RelatedAnimals } from '../../components/animalDetails/RelatedAnimals/RelatedAnimals';
 import { formatAge } from '../../utils/animals';
+import { resolveImageUrl } from '../../utils/images';
 import type {
   AnimalSex,
   AnimalSize,
@@ -130,8 +131,6 @@ const RELATED_ANIMALS: TypedDocumentNode<
   }
 `;
 
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
-
 function AnimalDetails() {
   const { id } = useParams();
 
@@ -162,7 +161,7 @@ function AnimalDetails() {
 
   const images = (animal?.images ?? []).map((image) => ({
     id: image.id,
-    url: `${API_URL}${image.url}`,
+    url: resolveImageUrl(image.url),
   }));
 
   const relatedAnimals = (relatedData?.animals.items ?? [])

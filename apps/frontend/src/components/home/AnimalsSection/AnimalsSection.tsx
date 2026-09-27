@@ -6,6 +6,7 @@ import { Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import './AnimalsSection.css';
 import { AnimalCard } from './AnimalCard/AnimalCard';
+import { resolveImageUrl } from '../../../utils/images';
 
 type Animal = {
   id: string;
@@ -122,8 +123,6 @@ const CITIES: TypedDocumentNode<CitiesData, CitiesVariables> = gql`
     cities(state: $state)
   }
 `;
-
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
 
 const speciesLabels = {
   DOG: 'Cachorro',
@@ -510,7 +509,7 @@ function AnimalsSection() {
                 city={animal.city}
                 state={animal.state}
                 species={speciesLabels[animal.species]}
-                imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
+                imageUrl={primaryImage ? resolveImageUrl(primaryImage.url) : ''}
                 href={`/animals/${animal.id}`}
               />
             );

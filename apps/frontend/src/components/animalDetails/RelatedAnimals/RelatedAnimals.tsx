@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 
 import { AnimalCard } from '../../home/AnimalsSection/AnimalCard/AnimalCard';
 import { formatAge, speciesLabels } from '../../../utils/animals';
+import { resolveImageUrl } from '../../../utils/images';
 import type { AnimalSpecies } from '../../../utils/animals';
 
 import './RelatedAnimals.css';
-
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
 
 interface RelatedAnimal {
   id: string;
@@ -57,7 +56,7 @@ export function RelatedAnimals({ animals }: RelatedAnimalsProps) {
               city={animal.city}
               state={animal.state}
               species={speciesLabels[animal.species]}
-              imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
+              imageUrl={primaryImage ? resolveImageUrl(primaryImage.url) : ''}
               href={`/animals/${animal.id}`}
             />
           );

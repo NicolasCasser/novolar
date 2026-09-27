@@ -13,6 +13,7 @@ import { ApplicantCard } from '../../components/requestDetails/ApplicantCard/App
 import { RequestAnimalCard } from '../../components/requestDetails/RequestAnimalCard/RequestAnimalCard';
 import { StatusManager } from '../../components/requestDetails/StatusManager/StatusManager';
 import { formatAge } from '../../utils/animals';
+import { resolveImageUrl } from '../../utils/images';
 import type { AnimalSex, AnimalSize, AnimalSpecies } from '../../utils/animals';
 import type { AdoptionRequestStatus } from '../../utils/adoptionRequests';
 import type { BrazilianState } from '../../utils/locations';
@@ -124,8 +125,6 @@ const REJECT: TypedDocumentNode<
     }
   }
 `;
-
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
 
 // O backend nao expoe um numero de protocolo, entao derivamos uma
 // referencia curta e estavel a partir do id apenas para exibicao.
@@ -242,7 +241,7 @@ function RequestDetails() {
             age={formatAge(request.animal.ageInMonths)}
             city={request.animal.city}
             state={request.animal.state}
-            imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
+            imageUrl={primaryImage ? resolveImageUrl(primaryImage.url) : ''}
           />
 
           <div className="request-details-side">

@@ -16,6 +16,7 @@ import { ConfirmDialog } from '../../components/ui/ConfirmDialog/ConfirmDialog';
 import { SummaryCards } from '../../components/ui/SummaryCards/SummaryCards';
 import type { SummaryCard } from '../../components/ui/SummaryCards/SummaryCards';
 import { formatAge } from '../../utils/animals';
+import { resolveImageUrl } from '../../utils/images';
 import type {
   AnimalSex,
   AnimalSize,
@@ -111,8 +112,6 @@ const DELETE_ANIMAL: TypedDocumentNode<DeleteAnimalData, { id: string }> = gql`
     deleteAnimal(id: $id)
   }
 `;
-
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
 
 const PAGE_SIZE = 5;
 
@@ -213,7 +212,7 @@ function AnimalsList() {
       state: item.state,
       createdAt: item.createdAt,
       status: item.status,
-      imageUrl: primaryImage ? `${API_URL}${primaryImage.url}` : '',
+      imageUrl: primaryImage ? resolveImageUrl(primaryImage.url) : '',
     };
   });
 
