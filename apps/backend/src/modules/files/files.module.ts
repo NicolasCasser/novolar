@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -5,6 +6,7 @@ import { FilesController } from './files.controller';
 import { File } from './entities/file.entity';
 import { FilesService } from './files.service';
 import { LocalStorageProvider } from './providers/local-storage.provider';
+import { CloudinaryStorageProvider } from './providers/cloudinary-storage.provider';
 import { STORAGE_PROVIDER } from './providers/storage.provider';
 
 @Module({
@@ -12,9 +14,19 @@ import { STORAGE_PROVIDER } from './providers/storage.provider';
   controllers: [FilesController],
   providers: [
     FilesService,
+    LocalStorageProvider,
+    CloudinaryStorageProvider,
     {
       provide: STORAGE_PROVIDER,
-      useClass: LocalStorageProvider,
+      useFactory: (
+        configService: ConfigService,
+        localProvider: LocalStorageProvider,
+        cloudinaryProvider: CloudinaryStorageProvider,
+      ) => {
+        const nodeEnv = configService.get<string>('NODE_ENV');
+        return nodeEnv === 'production' ? cloudinaryProvider : localProvider;
+      },
+      inject: [ConfigService, LocalStorageProvider, CloudinaryStorageProvider],
     },
   ],
   exports: [FilesService],
