@@ -12,6 +12,7 @@ import type { RecentRequest } from '../../components/dashboard/RecentRequests/Re
 import { StatCards } from '../../components/dashboard/StatCards/StatCards';
 import type { AnimalSpecies } from '../../utils/animals';
 import type { AdoptionRequestStatus } from '../../utils/adoptionRequests';
+import { resolveImageUrl } from '../../utils/images';
 
 type AnimalListData = {
   animals: {
@@ -139,8 +140,6 @@ const PENDING_REQUESTS: TypedDocumentNode<
   }
 `;
 
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
-
 const RECENT_ANIMALS_LIMIT = 3;
 const RECENT_REQUESTS_LIMIT = 5;
 const COUNT_LIMIT = 1;
@@ -220,7 +219,7 @@ function Dashboard() {
       city: animal.city,
       state: animal.state,
       createdAt: animal.createdAt,
-      imageUrl: primaryImage ? `${API_URL}${primaryImage.url}` : '',
+      imageUrl: primaryImage ? resolveImageUrl(primaryImage.url) : '',
     };
   });
 

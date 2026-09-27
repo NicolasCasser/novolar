@@ -11,6 +11,7 @@ import Header from '../../components/layout/Header/Header';
 import { ConfirmedAnimalCard } from '../../components/requestConfirmation/ConfirmedAnimalCard/ConfirmedAnimalCard';
 import { NextStepsCards } from '../../components/requestConfirmation/NextStepsCards/NextStepsCards';
 import { SuccessMessage } from '../../components/requestConfirmation/SuccessMessage/SuccessMessage';
+import { resolveImageUrl } from '../../utils/images';
 
 type AnimalData = {
   animal: {
@@ -47,8 +48,6 @@ const ANIMAL: TypedDocumentNode<AnimalData, AnimalVariables> = gql`
     }
   }
 `;
-
-const API_URL = import.meta.env.VITE_API_URL.replace('/graphql', '');
 
 function RequestConfirmation() {
   const { id } = useParams();
@@ -107,7 +106,7 @@ function RequestConfirmation() {
             breed={animal.breed}
             city={animal.city}
             state={animal.state}
-            imageUrl={primaryImage ? `${API_URL}${primaryImage.url}` : ''}
+            imageUrl={primaryImage ? resolveImageUrl(primaryImage.url) : ''}
           />
 
           <div className="request-confirmation-action">
