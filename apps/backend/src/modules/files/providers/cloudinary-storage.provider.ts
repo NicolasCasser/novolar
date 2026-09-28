@@ -17,10 +17,17 @@ export class CloudinaryStorageProvider implements StorageProvider {
     });
   }
 
+  private toPublicId(key: string): string {
+    const lastDotIndex = key.lastIndexOf('.');
+    const withoutExtension =
+      lastDotIndex > -1 ? key.slice(0, lastDotIndex) : key;
+    return `${this.folder}/${withoutExtension}`;
+  }
+
   async upload(file: Buffer, key: string, mimeType: string): Promise<void> {
     void mimeType;
 
-    const publicId = `${this.folder}/${key}`;
+    const publicId = this.toPublicId(key);
 
     return new Promise<void>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
@@ -45,7 +52,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
   }
 
   async delete(key: string): Promise<void> {
-    const publicId = `${this.folder}/${key}`;
+    const publicId = this.toPublicId(key);
 
     return new Promise<void>((resolve, reject) => {
       void cloudinary.uploader.destroy(
@@ -65,7 +72,7 @@ export class CloudinaryStorageProvider implements StorageProvider {
   }
 
   getUrl(key: string): Promise<string> {
-    const publicId = `${this.folder}/${key}`;
+    const publicId = this.toPublicId(key);
 
     const url = cloudinary.url(publicId, {
       resource_type: 'image',
