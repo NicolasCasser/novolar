@@ -92,7 +92,7 @@ describe('CloudinaryStorageProvider', () => {
       expect(cloudinary.uploader.upload_stream).toHaveBeenCalledTimes(1);
       expect(cloudinary.uploader.upload_stream).toHaveBeenCalledWith(
         expect.objectContaining({
-          public_id: 'novolar/files/image.jpg',
+          public_id: 'novolar/files/image',
           resource_type: 'image',
           overwrite: true,
         }),
@@ -139,7 +139,7 @@ describe('CloudinaryStorageProvider', () => {
 
       expect(cloudinary.uploader.destroy).toHaveBeenCalledTimes(1);
       expect(cloudinary.uploader.destroy).toHaveBeenCalledWith(
-        'novolar/files/image.jpg',
+        'novolar/files/image',
         { resource_type: 'image' },
         expect.any(Function),
       );
@@ -177,7 +177,7 @@ describe('CloudinaryStorageProvider', () => {
       const result = await provider.getUrl(key);
 
       expect(cloudinary.url).toHaveBeenCalledTimes(1);
-      expect(cloudinary.url).toHaveBeenCalledWith('novolar/files/image.jpg', {
+      expect(cloudinary.url).toHaveBeenCalledWith('novolar/files/image', {
         resource_type: 'image',
         secure: true,
         transformation: [{ fetch_format: 'auto', quality: 'auto' }],
